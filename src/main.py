@@ -1,6 +1,7 @@
 import argparse
-from utils import check_and_create_dir
+import json
 
+from utils import check_and_create_dir
 
 if __name__ == '__main__':
     # Create argument parser
@@ -16,6 +17,9 @@ if __name__ == '__main__':
 
     # Check if output directory exists, create it if not
     check_and_create_dir(args.output)
+
+    # Read config file
+    config = json.load(open(args.config, 'r'))
 
     # Run program
     # TODO: Run program
