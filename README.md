@@ -55,6 +55,7 @@ s3: CCAGGGACCA
 
 - [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 - Requirements listed in [requirements.txt](requirements.txt)
+  - blosum 2.0.2 -- [documentation](https://pypi.org/project/blosum/) `Used for fetching the BLOSUM62 matrix`
 
 ## Usage
 
