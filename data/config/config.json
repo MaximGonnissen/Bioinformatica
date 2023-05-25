@@ -1,0 +1,6 @@
+{
+  "match": 5,
+  "mismatch": -2,
+  "indel": -4,
+  "two gaps": 0
+}
