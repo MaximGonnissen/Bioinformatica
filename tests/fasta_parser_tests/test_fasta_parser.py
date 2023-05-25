@@ -173,3 +173,29 @@ class TestFastaParser(unittest.TestCase):
         results = dict(parse_str_generator(fasta_string))
 
         self.assertEqual(expected, results)
+
+    def test_parse_equal(self):
+        """
+        Test that the file and string parser methods have the same behaviour.
+        """
+        fasta_file = "fasta_parser_tests/test_inputs/valid_small.fasta"
+        with open(fasta_file, "r") as f:
+            fasta_string = f.read()
+
+        file_results = parse(fasta_file)
+        string_results = parse_str(fasta_string)
+
+        self.assertEqual(file_results, string_results)
+
+    def test_parse_equal_large(self):
+        """
+        Test that the file and string parser methods have the same behaviour.
+        """
+        fasta_file = "fasta_parser_tests/test_inputs/valid_large.fasta"
+        with open(fasta_file, "r") as f:
+            fasta_string = f.read()
+
+        file_results = parse(fasta_file)
+        string_results = parse_str(fasta_string)
+
+        self.assertEqual(file_results, string_results)
