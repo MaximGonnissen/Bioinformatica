@@ -64,10 +64,17 @@ Run from the root of the project (above the `src` folder):
 python main.py -c <config file> -i <input file> -o <output file>
 ```
 
-Where `<config file>` is the path to the config file, `<input file>` is the path to the input file, and `<output file>` is
+Where `<config file>` is the path to the config file, `<input file>` is the path to the input file, and `<output file>`
+is
 the path to the output file - all relative to the root of the project.
+
+### Example usage
+
+```shell
+python main.py -c ./data/config.json -i ./data/input/input.fasta -o ./data/output/output.txt
+```
 
 ## Testing
 
-Tests are provided in the `tests` folder. They can be examined as a reference for the expected output of the program, 
+Tests are provided in the `tests` folder. They can be examined as a reference for the expected output of the program,
 as well as examples of how to use the program.
