@@ -87,7 +87,7 @@ class ScoringMatrix(list):
         max_score_index = (0, 0)
         for i in range(self.width):
             for j in range(self.height):
-                if self.get_score(i, j) >= max_score:
+                if self.get_score(i, j) > max_score:
                     max_score = self.get_score(i, j)
                     max_score_index = (i, j)
         return max_score_index
