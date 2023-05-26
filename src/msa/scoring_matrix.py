@@ -20,12 +20,18 @@ class ScoringMatrix(list):
         self.width = len(bottom_sequence) + 1
         self.height = len(top_sequence) + 1
 
+        self.initialise()
+
     def initialise(self):
         """
         Initialise the scoring matrix.
         """
+        self.clear()
+
         for i in range(self.width):
-            self.append([0, []] * self.height)
+            self.append([])
+            for j in range(self.height):
+                self[i].append([0, []])
 
     def get_score(self, x: int, y: int) -> Union[int, float]:
         """
