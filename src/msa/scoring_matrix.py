@@ -116,8 +116,21 @@ class ScoringMatrix(list):
         """
         Print the scoring matrix.
         """
-        top_bar = '\t' * 2 + '\t'.join([f"{char}" for char in self.top_sequence])
-        print(top_bar)
+        print(self)
+
+    def __str__(self) -> str:
+        """
+        String representation of the scoring matrix.
+        :return: String representation of the scoring matrix.
+        """
+        matrix_string = ""
+        matrix_string += '\t' * 2 + '\t'.join([f"{char}" for char in self.top_sequence]) + '\n'
+
         for i in range(self.width):
-            row = '\t' * 2 + '\t'.join([f"{self.get_score(i, j)}" for j in range(self.height)])
-            print(row)
+            if i == 0:
+                matrix_string += '\t'
+            else:
+                matrix_string += f"{self.bottom_sequence[i - 1]}\t"
+            matrix_string += '\t'.join([f"{entry[0]}" for entry in self[i]]) + '\n'
+
+        return matrix_string
