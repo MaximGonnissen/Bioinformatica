@@ -1,8 +1,11 @@
 from typing import Tuple, Union
 
+from msa.enums import Direction
+from msa.scoring_matrix import ScoringMatrix
+
 
 def smith_waterman(bottom_sequence: str, top_sequence: str, config: dict, substitution_matrix: dict,
-                   print_matrix: bool = False) -> Tuple[int, str, str]:
+                   print_matrix: bool = False) -> Tuple[int, list[Tuple[str, str]]]:
     """
     Smith-Waterman algorithm for local sequence alignment.
 
@@ -13,7 +16,7 @@ def smith_waterman(bottom_sequence: str, top_sequence: str, config: dict, substi
     :param config: Configuration dictionary.
     :param substitution_matrix: Substitution matrix to be used for scoring.
     :param print_matrix: Whether to print the scoring matrix in the console.
-    :return: Tuple containing the score and the aligned sequences.
+    :return: Tuple containing the score and a list of tuples with the aligned sequences matching the score.
     """
 
     gap_penalty = int(config['indel'])
@@ -31,87 +34,115 @@ def smith_waterman(bottom_sequence: str, top_sequence: str, config: dict, substi
     x_length = len(bottom_sequence)
     y_length = len(top_sequence)
 
-    # Initialize scoring matrix
-    matrix = [[0 for _ in range(y_length + 1)] for _ in range(x_length + 1)]
+    # Initialise scoring matrix
+    matrix = ScoringMatrix(top_sequence, bottom_sequence)
 
-    def calc_matrix_score(_x: int, _y: int) -> Union[int, float]:
+    def calc_matrix_scores(_x: int, _y: int) -> list[Union[int, float]]:
         """
-        Calculate the score for a matrix entry.
+        Calculate the scores for a matrix entry.
         :param _x: Row index.
         :param _y: Column index.
-        :return: Score for the matrix entry.
+        :return: Scores for the matrix entry.
         """
         if _x == 0 or _y == 0:
-            return 0
-        return max(
-            matrix[_x - 1][_y - 1] + score_function(bottom_sequence[_x - 1], top_sequence[_y - 1]),
-            max([matrix[_x - _i][_y] - gap_penalty * _i for _i in range(1, _x + 1)]),
-            max([matrix[_x][_y - _j] - gap_penalty * _j for _j in range(1, _y + 1)]),
+            return [0]
+        return [
+            matrix.get_score(_x - 1, _y - 1) + score_function(bottom_sequence[_x - 1], top_sequence[_y - 1]),
+            max([matrix.get_score(_x - _i, _y) - gap_penalty * _i for _i in range(1, _x + 1)]),
+            max([matrix.get_score(_x, _y - _j) - gap_penalty * _j for _j in range(1, _y + 1)]),
             0
-        )
+        ]
 
-    # Fill scoring matrix
+    # Calculate scores and traceback directions for each matrix entry
     for i in range(x_length + 1):
         for j in range(y_length + 1):
-            matrix[i][j] = calc_matrix_score(i, j)
+            scores = calc_matrix_scores(i, j)
+            matrix.set_score(i, j, max(scores))
+            if len(scores) > 1:
+                if matrix.get_score(i, j) == scores[0]:
+                    matrix.add_traceback(i, j, Direction.DIAGONAL)
+                if matrix.get_score(i, j) == scores[1]:
+                    matrix.add_traceback(i, j, Direction.UP)
+                if matrix.get_score(i, j) == scores[2]:
+                    matrix.add_traceback(i, j, Direction.LEFT)
 
     if print_matrix:
-        top_bar = '\t' * 2 + '\t'.join([f"{char}" for char in top_sequence])
-        print(top_bar)
-        for i in range(x_length + 1):
-            if i == 0:
-                print('\t' + '\t'.join([f"{score}" for score in matrix[i]]))
-            else:
-                print(f"{bottom_sequence[i - 1]}\t" + '\t'.join([f"{int(score)}" for score in matrix[i]]))
+        matrix.print_matrix()
 
-    # Find maximum score to start traceback
-    max_score = 0
-    max_score_index = (0, 0)
-    for i in range(x_length + 1):
-        for j in range(y_length + 1):
-            if matrix[i][j] >= max_score:
-                max_score = matrix[i][j]
-                max_score_index = (i, j)
-
-    def traceback(_x: int, _y: int) -> tuple[int, tuple[str, str]]:
+    def traceback(_x: int, _y: int) -> tuple[int, list[tuple[str, str]]]:
         """
-        Recursively find the path with the highest score.
+        Recursively find the paths with the highest score.
         :param _x: Row index.
         :param _y: Column index.
-        :return: Tuple containing the score and the aligned sequences.
+        :return: Tuple containing the score and a list of tuples with alignments matching the score.
         """
-        if matrix[_x][_y] == 0:
-            return 0, (bottom_sequence[_x], top_sequence[_y])
+        if _x == 0 or _y == 0:
+            return matrix.get_score(_x, _y), [('', '')]
 
-        # Follow the path(s) with the highest score
-        _up_score = matrix[_x - 1][_y]
-        _left_score = matrix[_x][_y - 1]
-        _diagonal_score = matrix[_x - 1][_y - 1]
-        _max_score = max(_up_score, _left_score, _diagonal_score)
+        if matrix.get_score(_x, _y) == 0 or len(matrix.get_traceback(_x, _y)) == 0:
+            return matrix.get_score(_x, _y), [(bottom_sequence[_x - 1], top_sequence[_y - 1])]
 
-        if _max_score == _diagonal_score:
-            _score, _strings = traceback(_x - 1, _y - 1)
-            _diagonal_score, diagonal_string = _score + _max_score, (
-                _strings[0] + bottom_sequence[_x - 1], _strings[1] + top_sequence[_y - 1])
+        # Follow the traceback path
+        potential_paths_scored = []
+        for direction in matrix.get_traceback(_x, _y):
+            if direction == Direction.DIAGONAL:
+                score, paths = traceback(_x - 1, _y - 1)
+                new_score = score + matrix.get_score(_x, _y)
+                new_alignments = []
+                for alignment in paths:
+                    new_alignments.append((alignment[0] + bottom_sequence[_x - 1], alignment[1] + top_sequence[_y - 1]))
+                potential_paths_scored.append((new_score, new_alignments))
 
-        if _max_score == _up_score:
-            _score, _strings = traceback(_x - 1, _y)
-            _up_score, left_string = _score + _max_score, (_strings[0] + bottom_sequence[_x - 1], _strings[1] + "-")
+            elif direction == Direction.UP:
+                score, paths = traceback(_x - 1, _y)
+                new_score = score + matrix.get_score(_x, _y)
+                new_alignments = []
+                for alignment in paths:
+                    new_alignments.append((alignment[0] + bottom_sequence[_x - 1], alignment[1] + '-'))
+                potential_paths_scored.append((new_score, new_alignments))
 
-        if _max_score == _left_score:
-            _score, _strings = traceback(_x, _y - 1)
-            _left_score, up_string = _score + _max_score, (_strings[0] + "-", _strings[1] + top_sequence[_y - 1])
+            elif direction == Direction.LEFT:
+                score, paths = traceback(_x, _y - 1)
+                new_score = score + matrix.get_score(_x, _y)
+                new_alignments = []
+                for alignment in paths:
+                    new_alignments.append((alignment[0] + '-', alignment[1] + top_sequence[_y - 1]))
+                potential_paths_scored.append((new_score, new_alignments))
 
-        _max_score = max(_diagonal_score, _up_score, _left_score)
+            # Return the paths with the highest score
+            max_score = max([path[0] for path in potential_paths_scored])  # Find the max score
+            max_paths = [path[1] for path in potential_paths_scored if
+                         path[0] == max_score]  # Find the paths with the max score
 
-        if _max_score == _diagonal_score:
-            return _diagonal_score, diagonal_string
+            # Merge all max score results
+            actual_paths = []
+            for path in max_paths:
+                actual_paths += path
 
-        if _max_score == _up_score:
-            return _up_score, left_string
+            # Remove duplicates
+            actual_paths = list(set(actual_paths))
 
-        return _left_score, up_string
+            return max_score, actual_paths
 
-    score, strings = traceback(max_score_index[0], max_score_index[1])
+    # Find the starting points
+    potential_starting_points = matrix.max_score_index_multiple()
 
-    return score, strings[0], strings[1]
+    # Run traceback for each potential starting point
+    max_score = 0
+    results = []
+    for starting_point in potential_starting_points:
+        results.append(traceback(starting_point[0], starting_point[1]))
+
+    # Merge all max score results
+    max_score = max([result[0] for result in results])
+    max_results = [result[1] for result in results if result[0] == max_score]
+
+    # Merge all max score results
+    actual_results = []
+    for result in max_results:
+        actual_results += result
+
+    # Remove duplicates
+    actual_results = list(set(actual_results))
+
+    return max_score, actual_results
