@@ -1,9 +1,8 @@
 from typing import Tuple, Union
 
 
-def smith_waterman(bottom_sequence: Union[str, Tuple], top_sequence: Union[str, Tuple], config: dict,
-                   substitution_matrix: dict, print_matrix: bool = False) -> Tuple[
-    int, Tuple[str, str], Tuple[str, str]]:
+def smith_waterman(bottom_sequence: str, top_sequence: str, config: dict, substitution_matrix: dict,
+                   print_matrix: bool = False) -> Tuple[int, str, str]:
     """
     Smith-Waterman algorithm for local sequence alignment.
 
@@ -13,10 +12,9 @@ def smith_waterman(bottom_sequence: Union[str, Tuple], top_sequence: Union[str, 
         Can be a string representing the sequence, or a tuple with [sequence_id, sequence_string].
     :param config: Configuration dictionary.
     :param substitution_matrix: Substitution matrix to be used for scoring.
-    :param print_matrix: Whether to print the scoring matrix.
+    :param print_matrix: Whether to print the scoring matrix in the console.
     :return: Tuple containing the score and the aligned sequences.
     """
-    gap_penalty = config['indel']
 
     gap_penalty = int(config['indel'])
 
@@ -29,18 +27,6 @@ def smith_waterman(bottom_sequence: Union[str, Tuple], top_sequence: Union[str, 
         :return: Score for the two characters.
         """
         return substitution_matrix[char1][char2]
-
-    sequence_id1 = "s1"
-    sequence_id2 = "s2"
-
-    # If sequences are given as tuples, extract the sequence strings
-    if isinstance(bottom_sequence, tuple):
-        sequence_id1 = bottom_sequence[0]
-        bottom_sequence = bottom_sequence[1]
-
-    if isinstance(top_sequence, tuple):
-        sequence_id2 = top_sequence[0]
-        top_sequence = top_sequence[1]
 
     x_length = len(bottom_sequence)
     y_length = len(top_sequence)
@@ -128,4 +114,4 @@ def smith_waterman(bottom_sequence: Union[str, Tuple], top_sequence: Union[str, 
 
     score, strings = traceback(max_score_index[0], max_score_index[1])
 
-    return score, (sequence_id1, strings[0]), (sequence_id2, strings[1])
+    return score, strings[0], strings[1]
