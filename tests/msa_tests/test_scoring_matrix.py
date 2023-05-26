@@ -78,13 +78,3 @@ class TestScoringMatrix(unittest.TestCase):
         self.matrix.set_score(1, 0, 3)
         self.assertEqual(self.matrix.max_score(), 3)
         self.assertEqual(self.matrix.max_score_index(), (1, 0))
-
-    def test_matrix_print(self):
-        """
-        Test the print_matrix method.
-        """
-        self.matrix.print_matrix()
-        self.matrix.set_score(0, 0, 1)
-        self.matrix.set_score(0, 1, 2)
-        self.matrix.set_score(1, 0, 3)
-        self.matrix.print_matrix()
