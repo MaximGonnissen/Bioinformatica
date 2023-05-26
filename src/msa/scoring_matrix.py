@@ -99,6 +99,19 @@ class ScoringMatrix(list):
         """
         return self.get_score(*self.max_score_index())
 
+    def max_score_index_multiple(self) -> list[Tuple[int, int]]:
+        """
+        Find the indices of the highest scoring matrix entries.
+        :return: Indices of the highest scoring matrix entries.
+        """
+        max_score = self.max_score()
+        max_score_indices = []
+        for i in range(self.width):
+            for j in range(self.height):
+                if self.get_score(i, j) == max_score:
+                    max_score_indices.append((i, j))
+        return max_score_indices
+
     def print_matrix(self) -> None:
         """
         Print the scoring matrix.
