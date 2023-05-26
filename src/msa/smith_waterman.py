@@ -69,6 +69,15 @@ def smith_waterman(bottom_sequence: Union[str, Tuple], top_sequence: Union[str, 
         for j in range(y_length + 1):
             matrix[i][j] = calc_matrix_score(i, j)
 
+    if print_matrix:
+        top_bar = '\t' * 2 + '\t'.join([f"{char}" for char in top_sequence])
+        print(top_bar)
+        for i in range(x_length + 1):
+            if i == 0:
+                print('\t' + '\t'.join([f"{score}" for score in matrix[i]]))
+            else:
+                print(f"{bottom_sequence[i - 1]}\t" + '\t'.join([f"{int(score)}" for score in matrix[i]]))
+
     # Find maximum score to start traceback
     max_score = 0
     max_score_index = (0, 0)
