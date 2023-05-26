@@ -131,6 +131,6 @@ class ScoringMatrix(list):
                 matrix_string += '\t'
             else:
                 matrix_string += f"{self.bottom_sequence[i - 1]}\t"
-            matrix_string += '\t'.join([f"{entry[0]}" for entry in self[i]]) + '\n'
+            matrix_string += '\t'.join([f"{int(entry[0])}" for entry in self[i]]) + '\n'
 
         return matrix_string
