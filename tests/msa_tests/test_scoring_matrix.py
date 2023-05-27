@@ -1,7 +1,7 @@
 import unittest
 
-from src.msa.enums import Direction
-from src.msa.scoring_matrix import ScoringMatrix
+from src.enums import Direction
+from src.psa.scoring_matrix import ScoringMatrix
 
 
 class TestScoringMatrix(unittest.TestCase):

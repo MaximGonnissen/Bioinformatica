@@ -1,7 +1,7 @@
 from typing import Tuple, Union
 
-from msa.enums import Direction
-from msa.scoring_matrix import ScoringMatrix
+from psa.scoring_matrix import ScoringMatrix
+from src.enums import Direction
 
 
 def smith_waterman(bottom_sequence: str, top_sequence: str, config: dict, substitution_matrix: dict,
@@ -80,7 +80,7 @@ def smith_waterman(bottom_sequence: str, top_sequence: str, config: dict, substi
             return matrix.get_score(_x, _y), [('', '')]
 
         if matrix.get_score(_x, _y) == 0 or len(matrix.get_traceback(_x, _y)) == 0:
-            return matrix.get_score(_x, _y), [(bottom_sequence[_x - 1], top_sequence[_y - 1])]
+            return matrix.get_score(_x, _y), [('', '')]
 
         # Follow the traceback path
         potential_paths_scored = []
