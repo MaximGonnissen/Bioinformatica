@@ -35,7 +35,7 @@ def smith_waterman(bottom_sequence: str, top_sequence: str, config: dict, substi
     y_length = len(top_sequence)
 
     # Initialise scoring matrix
-    matrix = ScoringMatrix(top_sequence, bottom_sequence)
+    matrix = ScoringMatrix.smith_waterman(top_sequence, bottom_sequence)
 
     def calc_matrix_scores(_x: int, _y: int) -> list[Union[int, float]]:
         """
