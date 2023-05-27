@@ -47,7 +47,7 @@ class PSASolver(ABC):
         :param length: Length of the gap.
         :return: Gap penalty.
         """
-        return self.config['gap_penalty'] * length
+        return self.config['indel'] * length
 
     def solve(self, sequence_1: str, sequence_2: str) -> Tuple[int, List[Tuple[str, str]]]:
         """
