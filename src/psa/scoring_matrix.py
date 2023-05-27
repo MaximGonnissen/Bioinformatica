@@ -17,21 +17,12 @@ class ScoringMatrix(list):
         super().__init__(*args, **kwargs)
         self.top_sequence = top_sequence
         self.bottom_sequence = bottom_sequence
-        self.width = len(bottom_sequence) + 1
-        self.height = len(top_sequence) + 1
 
-        self.initialise()
+    def width(self):
+        return len(self.bottom_sequence) + 1
 
-    def initialise(self):
-        """
-        Initialise the scoring matrix.
-        """
-        self.clear()
-
-        for i in range(self.width):
-            self.append([])
-            for j in range(self.height):
-                self[i].append([0, []])
+    def height(self):
+        return len(self.top_sequence) + 1
 
     def get_score(self, x: int, y: int) -> Union[int, float]:
         """
@@ -85,8 +76,8 @@ class ScoringMatrix(list):
         """
         max_score = 0
         max_score_index = (0, 0)
-        for i in range(self.width):
-            for j in range(self.height):
+        for i in range(self.width()):
+            for j in range(self.height()):
                 if self.get_score(i, j) > max_score:
                     max_score = self.get_score(i, j)
                     max_score_index = (i, j)
@@ -106,8 +97,8 @@ class ScoringMatrix(list):
         """
         max_score = self.max_score()
         max_score_indices = []
-        for i in range(self.width):
-            for j in range(self.height):
+        for i in range(self.width()):
+            for j in range(self.height()):
                 if self.get_score(i, j) == max_score:
                     max_score_indices.append((i, j))
         return max_score_indices
@@ -126,7 +117,7 @@ class ScoringMatrix(list):
         matrix_string = ""
         matrix_string += '\t' * 2 + '\t'.join([f"{char}" for char in self.top_sequence]) + '\n'
 
-        for i in range(self.width):
+        for i in range(self.width()):
             if i == 0:
                 matrix_string += '\t'
             else:
@@ -134,3 +125,53 @@ class ScoringMatrix(list):
             matrix_string += '\t'.join([f"{int(entry[0])}" for entry in self[i]]) + '\n'
 
         return matrix_string
+
+    def init_smith_waterman(self) -> None:
+        """
+        Initialise the scoring matrix for the Smith-Waterman algorithm.
+        """
+        self.clear()
+        for i in range(self.width()):
+            self.append([])
+            for j in range(self.height()):
+                self[i].append([0, []])
+
+    @classmethod
+    def smith_waterman(cls, top_sequence: str, bottom_sequence: str) -> 'ScoringMatrix':
+        """
+        Initialise the scoring matrix for the Smith-Waterman algorithm.
+        :return: Scoring matrix for the Smith-Waterman algorithm.
+        """
+        matrix = cls(top_sequence, bottom_sequence)
+        matrix.init_smith_waterman()
+        return matrix
+
+    def init_needleman_wunsch(self) -> None:
+        """
+        Initialise the scoring matrix for the Needleman-Wunsch algorithm.
+        """
+        self.clear()
+        for i in range(self.width()):
+            self.append([])
+            for j in range(self.height()):
+                self[i].append([0, []])
+
+        for i in range(self.width()):
+            self.set_score(i, 0, -i)
+            self.set_traceback(i, 0, [Direction.UP])
+
+        for j in range(self.height()):
+            self.set_score(0, j, -j)
+            self.set_traceback(0, j, [Direction.LEFT])
+
+        self.set_traceback(0, 0, [])
+
+    @classmethod
+    def needleman_wunsch(cls, top_sequence: str, bottom_sequence: str) -> 'ScoringMatrix':
+        """
+        Initialise the scoring matrix for the Needleman-Wunsch algorithm.
+        :return: Scoring matrix for the Needleman-Wunsch algorithm.
+        """
+        matrix = cls(top_sequence, bottom_sequence)
+        matrix.init_needleman_wunsch()
+        return matrix
