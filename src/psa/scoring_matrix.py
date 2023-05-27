@@ -103,7 +103,7 @@ class ScoringMatrix(list):
                     max_score_indices.append((i, j))
         return max_score_indices
 
-    def print_matrix(self) -> None:
+    def print(self) -> None:
         """
         Print the scoring matrix.
         """
