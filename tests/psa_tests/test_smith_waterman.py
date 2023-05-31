@@ -64,3 +64,25 @@ class TestSmithWaterman(unittest.TestCase):
 
         for alignment in alignments:
             self.assertIn(alignment, correct_pairs)
+
+    def test_psa_init_match_mismatch(self):
+        """
+        Test that a PSA solver's score matrix uses match and mismatch values if they are provided.
+        """
+        config = {
+            'match': 5,
+            'mismatch': -5,
+            'indel': 2
+        }
+
+        solver = SmithWatermanPSASolver(config=config)
+
+        self.assertEqual(solver.substitution_matrix['A']['A'], 5)
+        self.assertEqual(solver.substitution_matrix['A']['C'], -5)
+
+        for key in solver.substitution_matrix.keys():
+            for other_key in solver.substitution_matrix[key].keys():
+                if key != other_key:
+                    self.assertEqual(solver.substitution_matrix[key][other_key], -5)
+                else:
+                    self.assertEqual(solver.substitution_matrix[key][other_key], 5)
