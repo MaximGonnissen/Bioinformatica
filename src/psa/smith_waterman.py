@@ -56,12 +56,14 @@ class SmithWatermanPSASolver(PSASolver):
         # Find the starting points
         potential_starting_points = self.get_starting_points()
 
+        score = max([self.scoring_matrix.get_score(x, y) for x, y in potential_starting_points])
+
         # Run traceback for each potential starting point
         results = []
         for starting_point in potential_starting_points:
             results += self.traceback(starting_point[0], starting_point[1])
 
-        return self.scoring_matrix.max_score(), results
+        return score, results
 
     def calc_matrix_score(self, x: int, y: int) -> list[Union[int, float]]:
         """
