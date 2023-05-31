@@ -12,7 +12,7 @@ class MSASolver(ABC):
     Abstract class for multiple sequence alignment solvers.
     """
 
-    def __init__(self, config: dict, substitution_matrix: Optional[dict], *args, **kwargs):
+    def __init__(self, config: dict, substitution_matrix: Optional[dict] = None, *args, **kwargs):
         """
         Initialise the PSA solver.
         :param config: Configuration for the PSA solver.
