@@ -34,7 +34,7 @@ class PSASolver(ABC):
 
     @property
     @abstractmethod
-    def scoring_matrix_cls(self) -> Callable:
+    def scoring_matrix_cls(self) -> Callable[[str, str], ScoringMatrix]:
         """
         Scoring matrix class to use for the PSA solver.
         """
@@ -57,16 +57,19 @@ class PSASolver(ABC):
         """
         return self.config['indel'] * length
 
-    def solve(self, sequence_1: str, sequence_2: str) -> Tuple[int, List[Tuple[str, str]]]:
+    def solve(self, sequence_1: str, sequence_2: str, scoring_matrix: ScoringMatrix = None) -> Tuple[
+        int, List[Tuple[str, str]]]:
         """
         Solve the pairwise sequence alignment problem.
         :param sequence_1: The first sequence.
         :param sequence_2: The second sequence.
+        :param scoring_matrix: Scoring matrix to use for the PSA solver.
         :return: The score and all valid alignments.
         """
         self.sequence_1 = sequence_1
         self.sequence_2 = sequence_2
-        self.scoring_matrix = self.scoring_matrix_cls(sequence_1, sequence_2)
+        self.scoring_matrix = self.scoring_matrix_cls(sequence_1,
+                                                      sequence_2) if scoring_matrix is None else scoring_matrix
         self.pre_solve()
         results = self._solve()
         return self.post_solve(results)
