@@ -25,6 +25,13 @@ class NeedlemanWunschPSASolver(SmithWatermanPSASolver):
         """
         return ScoringMatrix.needleman_wunsch
 
+    def get_starting_points(self) -> list[tuple[int, int]]:
+        """
+        Get the starting points for the PSA problem.
+        :return: List of starting points.
+        """
+        return [self.scoring_matrix.corner_index()]
+
     def calc_matrix_score(self, x: int, y: int) -> list[Union[int, float]]:
         """
         Calculate the scores for a matrix entry.
