@@ -18,10 +18,10 @@ class ScoringMatrix(list):
         self.top_sequence = top_sequence
         self.bottom_sequence = bottom_sequence
 
-    def width(self):
+    def width(self) -> int:
         return len(self.bottom_sequence) + 1
 
-    def height(self):
+    def height(self) -> int:
         return len(self.top_sequence) + 1
 
     def get_score(self, x: int, y: int) -> Union[int, float]:
