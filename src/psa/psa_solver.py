@@ -24,6 +24,14 @@ class PSASolver(ABC):
         self.sequence_1: str = None
         self.sequence_2: str = None
 
+        if None not in [config.get("match"), config.get("mismatch")]:
+            for key in self.substitution_matrix.keys():
+                for other_key in self.substitution_matrix[key].keys():
+                    if key == other_key:
+                        self.substitution_matrix[key][other_key] = config["match"]
+                    else:
+                        self.substitution_matrix[key][other_key] = config["mismatch"]
+
     @property
     @abstractmethod
     def scoring_matrix_cls(self) -> Callable:
