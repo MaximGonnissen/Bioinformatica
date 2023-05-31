@@ -27,6 +27,13 @@ class SmithWatermanPSASolver(PSASolver):
         """
         return ScoringMatrix.smith_waterman
 
+    def get_starting_points(self) -> List[Tuple[int, int]]:
+        """
+        Get the starting points for the PSA problem.
+        :return: List of starting points.
+        """
+        return self.scoring_matrix.max_score_index_multiple()
+
     def _solve(self) -> Tuple[int, List[Tuple[str, str]]]:
         """
         Solve the PSA problem.
@@ -47,7 +54,7 @@ class SmithWatermanPSASolver(PSASolver):
                         self.scoring_matrix.add_traceback(i, j, Direction.LEFT)
 
         # Find the starting points
-        potential_starting_points = self.scoring_matrix.max_score_index_multiple()
+        potential_starting_points = self.get_starting_points()
 
         # Run traceback for each potential starting point
         results = []
