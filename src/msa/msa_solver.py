@@ -89,6 +89,4 @@ class MSASolver(ABC):
             results += solver.solve(sequence_1=solver.sequence_1, sequence_2=solver.sequence_2,
                                     scoring_matrix=solver.scoring_matrix)[1]
 
-        print(results)
-
         return results
