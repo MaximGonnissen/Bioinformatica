@@ -1,5 +1,4 @@
 from typing import Tuple, Union, Optional, List, Callable
-from warnings import warn
 
 from psa.psa_solver import PSASolver
 from psa.scoring_matrix import ScoringMatrix
@@ -92,12 +91,7 @@ class SmithWatermanPSASolver(PSASolver):
         if x == 0 or y == 0:
             return [('', '')]
 
-        if self.scoring_matrix.get_score(x, y) == 0:
-            return [('', '')]
-
         if len(self.scoring_matrix.get_traceback(x, y)) == 0:
-            warn(f'No traceback directions found. This should probably not happen.\nMatrix coordinates: {x}, {y}')
-            self.scoring_matrix.print()
             return [('', '')]
 
         # Follow the traceback path
