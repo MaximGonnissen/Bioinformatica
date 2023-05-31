@@ -103,6 +103,13 @@ class ScoringMatrix(list):
                     max_score_indices.append((i, j))
         return max_score_indices
 
+    def corner_index(self) -> Tuple[int, int]:
+        """
+        Find the corner matrix entry.
+        :return: Indices of the corner matrix entry.
+        """
+        return self.width() - 1, self.height() - 1
+
     def print(self) -> None:
         """
         Print the scoring matrix.
