@@ -9,7 +9,7 @@ class NeedlemanWunschPSASolver(SmithWatermanPSASolver):
     Needleman-Wunsch solver for the PSA problem.
     """
 
-    def __init__(self, config: dict, substitution_matrix: Optional[dict], *args, **kwargs):
+    def __init__(self, config: dict, substitution_matrix: Optional[dict] = None, *args, **kwargs):
         """
         Initialise the solver.
         :param config: Configuration dictionary.

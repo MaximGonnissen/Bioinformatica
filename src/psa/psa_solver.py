@@ -11,7 +11,7 @@ class PSASolver(ABC):
     Abstract class for pairwise sequence alignment solvers.
     """
 
-    def __init__(self, config: dict, substitution_matrix: Optional[dict], *args, **kwargs):
+    def __init__(self, config: dict, substitution_matrix: Optional[dict] = None, *args, **kwargs):
         """
         Initialise the PSA solver.
         :param config: Configuration for the PSA solver.
