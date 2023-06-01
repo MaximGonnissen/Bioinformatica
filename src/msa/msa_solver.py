@@ -47,10 +47,12 @@ class MSASolver(ABC):
         :return: The aligned sequences.
         """
         sequence_combinations = []
+        paired_sequences = []
         for sequence in sequences:
             for other_sequence in sequences:
-                if sequence != other_sequence:
+                if sequence != other_sequence and other_sequence not in paired_sequences:
                     sequence_combinations.append((sequence, other_sequence))
+            paired_sequences.append(sequence)
 
         solvers = []
         for combination in sequence_combinations:
