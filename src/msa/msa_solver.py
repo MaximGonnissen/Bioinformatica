@@ -74,7 +74,7 @@ class MSASolver(ABC):
                 solver_matrix = solver.scoring_matrix
                 for i in range(solver_matrix.width()):
                     for j in range(solver_matrix.height()):
-                        if i <= new_solver_matrix.width() and j <= new_solver_matrix.height():
+                        if i < new_solver_matrix.width() and j < new_solver_matrix.height():
                             new_solver_matrix.set_score(i, j,
                                                         new_solver_matrix.get_score(i, j) + solver_matrix.get_score(i,
                                                                                                                     j))
