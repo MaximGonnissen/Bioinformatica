@@ -1,7 +1,7 @@
 from typing import Tuple, Union, Optional, List, Callable
 
 from psa.psa_solver import PSASolver
-from scoring_matrix.scoring_matrix import ScoringMatrix
+from psa.scoring_matrix.scoring_matrix import ScoringMatrix
 from src.enums import Direction
 
 

@@ -3,7 +3,7 @@ from typing import List, Tuple, Union, Optional, Callable
 
 from blosum import BLOSUM
 
-from scoring_matrix.scoring_matrix import ScoringMatrix
+from psa.scoring_matrix.scoring_matrix import ScoringMatrix
 
 
 class PSASolver(ABC):

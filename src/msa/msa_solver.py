@@ -4,7 +4,7 @@ from typing import List, Tuple, Callable, Optional
 from blosum import BLOSUM
 
 from psa.psa_solver import PSASolver
-from scoring_matrix.scoring_matrix import ScoringMatrix
+from psa.scoring_matrix.scoring_matrix import ScoringMatrix
 
 
 class MSASolver(ABC):

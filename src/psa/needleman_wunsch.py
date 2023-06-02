@@ -1,7 +1,7 @@
 from typing import Union, Optional, Callable
 
+from psa.scoring_matrix.scoring_matrix import ScoringMatrix
 from psa.smith_waterman import SmithWatermanPSASolver
-from scoring_matrix.scoring_matrix import ScoringMatrix
 
 
 class NeedlemanWunschPSASolver(SmithWatermanPSASolver):
