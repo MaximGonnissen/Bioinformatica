@@ -1,13 +1,13 @@
 from typing import Callable
 
-from msa.msa_solver import MSASolver
-from psa.needleman_wunsch import NeedlemanWunschPSASolver
+from msa.deprecated.msa_solver import MSASolver
 from psa.psa_solver import PSASolver
+from psa.smith_waterman import SmithWatermanPSASolver
 
 
-class NeedlemanWunschMSASolver(MSASolver):
+class SmithWatermanMSASolver(MSASolver):
     """
-    Class for the Needleman-Wunsch multiple sequence alignment solver.
+    Class for the Smith-Waterman multiple sequence alignment solver.
     """
 
     @property
@@ -16,4 +16,4 @@ class NeedlemanWunschMSASolver(MSASolver):
         Returns the solver class.
         :return: The solver class.
         """
-        return NeedlemanWunschPSASolver
+        return SmithWatermanPSASolver
