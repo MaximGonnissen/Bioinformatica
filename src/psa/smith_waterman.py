@@ -1,8 +1,8 @@
 from typing import Tuple, Union, Optional, List, Callable
 
+from psa.enums import Direction
 from psa.psa_solver import PSASolver
 from psa.scoring_matrix.scoring_matrix import ScoringMatrix
-from src.enums import Direction
 
 
 class SmithWatermanPSASolver(PSASolver):

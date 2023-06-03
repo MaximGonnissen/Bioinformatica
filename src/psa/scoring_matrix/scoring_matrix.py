@@ -1,6 +1,6 @@
 from typing import Union, Tuple
 
-from src.enums import Direction
+from psa.enums import Direction
 
 
 class ScoringMatrix(list):
