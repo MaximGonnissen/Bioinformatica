@@ -19,12 +19,27 @@ class ScoringMatrixEntry:
         self.score = score
         self.traceback = traceback or []
 
-    def __getitem__(self, *args) -> Any:
+    def __getitem__(self, index: int) -> Any:
         """
-        Get the score.
-        Required to get around an issue with finding the max score.
+        Treat the scoring matrix entry as a list.
         """
-        return self.score
+        if index == 0:
+            return self.score
+        elif index == 1:
+            return self.traceback
+        else:
+            raise IndexError("Index out of range.")
+
+    def __setitem__(self, index: int, value: Any) -> None:
+        """
+        Treat the scoring matrix entry as a list.
+        """
+        if index == 0:
+            self.score = value
+        elif index == 1:
+            self.traceback = value
+        else:
+            raise IndexError("Index out of range.")
 
     def __str__(self):
         """
@@ -50,6 +65,8 @@ class ScoringMatrixEntry:
             return self.score == other.score
         elif isinstance(other, (int, float)):
             return self.score == other
+        elif isinstance(other, (list, tuple)):
+            return self.score == other[0] and self.traceback == other[1]
         else:
             return False
 
@@ -63,6 +80,8 @@ class ScoringMatrixEntry:
             return self.score != other.score
         elif isinstance(other, (int, float)):
             return self.score != other
+        elif isinstance(other, (list, tuple)):
+            return self.score != other[0] or self.traceback != other[1]
         else:
             return True
 
@@ -197,28 +216,6 @@ class ScoringMatrixEntry:
         elif isinstance(other, (int, float)):
             return ScoringMatrixEntry(self.score ** other, self.traceback)
         raise TypeError(f"'**' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
-
-    def __cmp__(self, other):
-        """
-        Compare the scoring matrix entries.
-        :param other: Other scoring matrix entry.
-        :return: Comparison of the scoring matrix entries.
-        """
-        if isinstance(other, ScoringMatrixEntry):
-            if self.score < other.score:
-                return -1
-            elif self.score > other.score:
-                return 1
-            else:
-                return 0
-        elif isinstance(other, (int, float)):
-            if self.score < other:
-                return -1
-            elif self.score > other:
-                return 1
-            else:
-                return 0
-        raise TypeError(f"'cmp' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
 
 class ScoringMatrix:
