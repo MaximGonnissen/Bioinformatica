@@ -230,8 +230,9 @@ class ScoringMatrix:
         """
         self.sequences = sequences
         self.shape = tuple(len(sequence) + 1 for sequence in sequences)
-        np_from_py_wrapper = np.frompyfunc(ScoringMatrixEntry, 0, 1)
         self.matrix = np.empty(self.shape, dtype=object)
+
+        np_from_py_wrapper = np.frompyfunc(ScoringMatrixEntry, 0, 1)
         np_from_py_wrapper(self.matrix)
 
     def __getitem__(self, item: Union[int, Tuple[int, ...]]) -> ScoringMatrixEntry:
