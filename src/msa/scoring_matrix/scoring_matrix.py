@@ -347,8 +347,10 @@ class ScoringMatrix:
         Initialise the Needleman-Wunsch scoring matrix.
         :param gap_penalty: Gap penalty.
         """
-        # Initialise for arbitrary number of sequences
-        for i in range(1, self.shape[0]):
-            self[i, 0] = ScoringMatrixEntry(i * gap_penalty, [(i - 1, 0)])
-        for j in range(1, self.shape[1]):
-            self[0, j] = ScoringMatrixEntry(j * gap_penalty, [(0, j - 1)])
+        for dimension in range(len(self.shape)):
+            indices = [0] * len(self.shape)
+            previous_index = indices.copy()
+            for i in range(1, self.shape[dimension]):
+                indices[dimension] = i
+                self[tuple(indices)] = ScoringMatrixEntry(score=i * -gap_penalty, traceback=[tuple(previous_index)])
+                previous_index = indices.copy()
