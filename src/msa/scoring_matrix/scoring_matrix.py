@@ -9,6 +9,7 @@ class ScoringMatrixEntry:
 
     Primarily meant to get around an issue with numpy fill.
     """
+    verbose_repr = False
 
     def __init__(self, score: Union[int, float] = 0, traceback: List[Any] = None):
         """
@@ -53,7 +54,9 @@ class ScoringMatrixEntry:
         Get the representation of the scoring matrix entry.
         :return: Representation of the scoring matrix entry.
         """
-        return f"ScoringMatrixEntry({self.score}, {self.traceback})"
+        if self.verbose_repr:
+            return f"ScoringMatrixEntry({self.score}, {self.traceback})"
+        return str(self.score)
 
     def __eq__(self, other: 'ScoringMatrixEntry') -> bool:
         """
