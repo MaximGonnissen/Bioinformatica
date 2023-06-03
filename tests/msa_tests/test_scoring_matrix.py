@@ -1,7 +1,7 @@
 import unittest
 
 from src.fasta_parser.fasta_parser import parse
-from src.msa.scoring_matrix.scoring_matrix import ScoringMatrix
+from src.msa.scoring_matrix.scoring_matrix import ScoringMatrix, ScoringMatrixEntry
 
 
 class TestScoringMatrix(unittest.TestCase):
@@ -9,19 +9,150 @@ class TestScoringMatrix(unittest.TestCase):
     Tests for the MSA scoring matrix.
     """
 
+    def setUp(self) -> None:
+        """
+        Set up the test case.
+        """
+        self.sequences = parse("msa_tests/test_inputs/test.fasta")
+        self.sequence_values = [sequence for sequence in self.sequences.values()]
+        self.scoring_matrix = ScoringMatrix(self.sequence_values)
+
     def test_initialise(self):
         """
         Test initialisation of the scoring matrix.
         """
-        sequences = parse("msa_tests/test_inputs/test.fasta")
-
-        sequences = [sequence for sequence in sequences.values()]
-
-        scoring_matrix = ScoringMatrix(sequences)
-
-        self.assertEqual(scoring_matrix.shape, (21, 16, 16))
+        self.assertEqual(self.scoring_matrix.shape, (21, 16, 16))
 
         for i in range(21):
             for j in range(16):
                 for k in range(16):
-                    self.assertEqual(scoring_matrix[i, j, k], 0)
+                    self.assertEqual(self.scoring_matrix[i, j, k].score, 0)
+
+    def test_set_direct(self):
+        """
+        Test the setter for the scoring matrix.
+        """
+        self.scoring_matrix[0, 0, 0] = 1
+        self.assertEqual(self.scoring_matrix[0, 0, 0].score, 1)
+
+        self.scoring_matrix[0, 0, 1] = 2
+        self.assertEqual(self.scoring_matrix[0, 0, 0].score, 1)
+        self.assertEqual(self.scoring_matrix[0, 0, 1].score, 2)
+
+        self.scoring_matrix[0, 0, 2] = 3
+        self.assertEqual(self.scoring_matrix[0, 0, 0].score, 1)
+        self.assertEqual(self.scoring_matrix[0, 0, 1].score, 2)
+        self.assertEqual(self.scoring_matrix[0, 0, 2].score, 3)
+
+        self.scoring_matrix[0, 0, 0] = ScoringMatrixEntry(4, [1, 2, 3])
+        self.assertEqual(self.scoring_matrix[0, 0, 0].score, 4)
+        self.assertEqual(self.scoring_matrix[0, 0, 0].traceback, [1, 2, 3])
+        self.assertEqual(self.scoring_matrix[0, 0, 1].score, 2)
+        self.assertEqual(self.scoring_matrix[0, 0, 2].score, 3)
+
+        self.assertNotEqual(self.scoring_matrix[0, 0, 0].score, 1)
+
+    def test_set_score(self):
+        """
+        Test setting a score in the scoring matrix.
+        """
+        self.scoring_matrix.set_score(0, 0, 0, score=1)
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 1)
+
+        self.scoring_matrix.set_score(0, 0, 1, score=2)
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 1)
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 1), 2)
+
+        self.scoring_matrix.set_score(0, 0, 2, score=3)
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 1)
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 1), 2)
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 2), 3)
+
+    def test_add_traceback(self):
+        """
+        Test adding a traceback to the scoring matrix.
+        """
+        self.scoring_matrix.add_traceback(0, 0, 0, traceback_direction=(1, 1, 1))
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(1, 1, 1)])
+
+        self.scoring_matrix.add_traceback(0, 0, 0, traceback_direction=(2, 2, 2))
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(1, 1, 1), (2, 2, 2)])
+
+    def test_max_score(self):
+        """
+        Test finding the maximum score in the scoring matrix.
+        """
+        self.scoring_matrix.set_score(0, 0, 0, score=1)
+        self.scoring_matrix.set_score(0, 0, 1, score=2)
+        self.scoring_matrix.set_score(0, 1, 0, score=3)
+        self.scoring_matrix.set_score(0, 1, 1, score=4)
+
+        self.assertEqual(self.scoring_matrix.max_score(), 4)
+
+    def test_max_score_index(self):
+        """
+        Test finding the index of the maximum score in the scoring matrix.
+        """
+        self.scoring_matrix.set_score(0, 0, 0, score=1)
+        self.scoring_matrix.set_score(0, 0, 1, score=2)
+        self.scoring_matrix.set_score(0, 1, 0, score=3)
+        self.scoring_matrix.set_score(0, 1, 1, score=4)
+
+        self.assertEqual(self.scoring_matrix.get_max_index(), (0, 1, 1))
+
+        self.scoring_matrix.set_score(3, 1, 2, score=5)
+
+        self.assertEqual(self.scoring_matrix.get_max_index(), (3, 1, 2))
+
+    def test_get_traceback(self):
+        """
+        Test getting the traceback from the scoring matrix.
+        """
+        self.scoring_matrix.add_traceback(0, 0, 0, traceback_direction=(1, 1, 1))
+
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(1, 1, 1)])
+
+        self.scoring_matrix.add_traceback(0, 0, 0, traceback_direction=(2, 2, 2))
+
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(1, 1, 1), (2, 2, 2)])
+
+    def test_mixed_set(self):
+        """
+        Test that setting both scores and tracebacks don't cause issues.
+        """
+        self.scoring_matrix.set_score(0, 0, 0, score=1)
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 1)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [])
+
+        self.scoring_matrix.add_traceback(0, 0, 0, traceback_direction=(1, 1, 1))
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 1)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(1, 1, 1)])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 1), 0)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 1), [])
+
+        self.scoring_matrix.set_score(0, 0, 1, score=2)
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 1)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(1, 1, 1)])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 1), 2)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 1), [])
+
+        self.scoring_matrix.add_traceback(0, 0, 1, traceback_direction=(2, 2, 2))
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 1)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(1, 1, 1)])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 1), 2)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 1), [(2, 2, 2)])
+
+        self.scoring_matrix.set_traceback(0, 0, 1, traceback=[(3, 3, 3)])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 1)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(1, 1, 1)])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 1), 2)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 1), [(3, 3, 3)])
