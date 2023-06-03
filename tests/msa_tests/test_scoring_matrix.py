@@ -87,7 +87,7 @@ class TestScoringMatrix(unittest.TestCase):
         self.scoring_matrix.set_score(0, 1, 0, score=3)
         self.scoring_matrix.set_score(0, 1, 1, score=4)
 
-        self.assertEqual(self.scoring_matrix.max_score(), 4)
+        self.assertEqual(self.scoring_matrix.get_max_score(), 4)
 
     def test_max_score_index(self):
         """
@@ -156,3 +156,44 @@ class TestScoringMatrix(unittest.TestCase):
 
         self.assertEqual(self.scoring_matrix.get_score(0, 0, 1), 2)
         self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 1), [(3, 3, 3)])
+
+    def test_invalid_direct_set(self):
+        """
+        Test that setting invalid values directly to the matrix raises an error.
+        """
+        with self.assertRaises(TypeError):
+            self.scoring_matrix[0, 0, 0] = "A"
+
+        with self.assertRaises(TypeError):
+            self.scoring_matrix[0, 0, 0] = object
+
+        with self.assertRaises(TypeError):
+            self.scoring_matrix[0, 0, 0] = None
+
+    def test_direct_set_traceback(self):
+        """
+        Test that setting tracebacks directly to the matrix works.
+        """
+        self.scoring_matrix[0, 0, 0] = [(1, 1, 1)]
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 0)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(1, 1, 1)])
+
+        self.scoring_matrix[0, 0, 0] = [(2, 2, 2)]
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 0)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(2, 2, 2)])
+
+        self.scoring_matrix[0, 0, 0] = [(3, 3, 3)]
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0), 0)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0), [(3, 3, 3)])
+
+    def test_get_corner_index(self):
+        """
+        Test that getting the corner index works.
+        """
+        matrix_shape = self.scoring_matrix.shape
+
+        self.assertEqual(self.scoring_matrix.get_corner_index(),
+                         (matrix_shape[0] - 1, matrix_shape[1] - 1, matrix_shape[2] - 1))
