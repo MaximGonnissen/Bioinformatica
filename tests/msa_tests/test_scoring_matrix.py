@@ -445,3 +445,32 @@ class TestScoringMatrix4D(unittest.TestCase):
         self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0, 0), [(1, 1, 1, 1)])
         self.assertEqual(self.scoring_matrix[0, 0, 0, 0], 2)
         self.assertEqual(self.scoring_matrix[0, 0, 0, 1], 0)
+
+    def test_needleman_wunsch_init(self):
+        """
+        Test that the Needleman-Wunsch initialization works in 4D.
+        """
+        gap_penalty = 1
+
+        self.scoring_matrix.init_needleman_wunsch(gap_penalty=gap_penalty)
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0, 0), 0)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0, 0), [])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 0, 1), -1)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 0, 1), [(0, 0, 0, 0)])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 1, 0), -1)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 1, 0), [(0, 0, 0, 0)])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 0, 1, 1), 0)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 0, 1, 1), [])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 1, 0, 0), -1)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 1, 0, 0), [(0, 0, 0, 0)])
+
+        self.assertEqual(self.scoring_matrix.get_score(0, 1, 0, 1), 0)
+        self.assertEqual(self.scoring_matrix.get_traceback(0, 1, 0, 1), [])
+
+        self.assertEqual(self.scoring_matrix.get_score(1, 0, 0, 0), -1)
+        self.assertEqual(self.scoring_matrix.get_traceback(1, 0, 0, 0), [(0, 0, 0, 0)])
