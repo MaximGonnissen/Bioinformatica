@@ -264,14 +264,14 @@ class ScoringMatrix:
         """
         return np.unravel_index(np.argmax(self.matrix), self.shape)
 
-    def max_score(self) -> Union[int, float]:
+    def get_max_score(self) -> Union[int, float]:
         """
         Get the maximum score in the matrix.
         :return: Maximum score in the matrix.
         """
         return np.max(self.matrix).score
 
-    def corner_index(self) -> Tuple[int, ...]:
+    def get_corner_index(self) -> Tuple[int, ...]:
         """
         Get the index of the corner of the matrix.
         :return: Index of the corner of the matrix.
