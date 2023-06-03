@@ -28,4 +28,4 @@ class TestSmithWatermanMSA(unittest.TestCase):
 
         # TODO: Write actual asserts -- need correct data to use as verification data.
 
-        print(alignments)
+        # print(alignments)
