@@ -42,7 +42,7 @@ class TestNeedlemanWunsch(unittest.TestCase):
 
     def test_needleman_wunsch_2(self):
         """
-        Test the Needleman-Wunsch algorithm with an indel penalty of 1.
+        Test the Needleman-Wunsch algorithm with an indel penalty of 3.
         """
         sequences = parse("psa_tests/test_inputs/test.fasta")
 
@@ -70,7 +70,7 @@ class TestNeedlemanWunsch(unittest.TestCase):
 
     def test_needleman_wunsch_3(self):
         """
-        Test the Needleman-Wunsch algorithm with an indel penalty of 1.
+        Test the Needleman-Wunsch algorithm with an indel penalty of 15.
         """
         sequences = parse("psa_tests/test_inputs/test.fasta")
 

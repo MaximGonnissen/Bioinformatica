@@ -153,7 +153,7 @@ class ScoringMatrix(list):
         matrix.init_smith_waterman()
         return matrix
 
-    def init_needleman_wunsch(self) -> None:
+    def init_needleman_wunsch(self, gap_penalty: int = 1) -> None:
         """
         Initialise the scoring matrix for the Needleman-Wunsch algorithm.
         """
@@ -164,21 +164,21 @@ class ScoringMatrix(list):
                 self[i].append([0, []])
 
         for i in range(self.width()):
-            self.set_score(i, 0, -i)
+            self.set_score(i, 0, -i * gap_penalty)
             self.set_traceback(i, 0, [Direction.UP])
 
         for j in range(self.height()):
-            self.set_score(0, j, -j)
+            self.set_score(0, j, -j * gap_penalty)
             self.set_traceback(0, j, [Direction.LEFT])
 
         self.set_traceback(0, 0, [])
 
     @classmethod
-    def needleman_wunsch(cls, top_sequence: str, bottom_sequence: str) -> 'ScoringMatrix':
+    def needleman_wunsch(cls, top_sequence: str, bottom_sequence: str, gap_penalty: int = 1) -> 'ScoringMatrix':
         """
         Initialise the scoring matrix for the Needleman-Wunsch algorithm.
         :return: Scoring matrix for the Needleman-Wunsch algorithm.
         """
         matrix = cls(top_sequence, bottom_sequence)
-        matrix.init_needleman_wunsch()
+        matrix.init_needleman_wunsch(gap_penalty)
         return matrix
