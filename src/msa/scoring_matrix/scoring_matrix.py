@@ -251,10 +251,10 @@ class ScoringMatrix:
         :param key: Index of the item.
         :param value: Value to set the item to.
         """
-        if isinstance(value, int) or isinstance(value, float):
-            value = ScoringMatrixEntry(value)
-        elif isinstance(value, list):
-            value = ScoringMatrixEntry(traceback=value)
+        if isinstance(value, (int, float)):
+            value = ScoringMatrixEntry(score=value, traceback=self.matrix[key].traceback)
+        elif isinstance(value, (list, tuple)):
+            value = ScoringMatrixEntry(traceback=value, score=self.matrix[key].score)
         elif not isinstance(value, ScoringMatrixEntry):
             raise TypeError('Value must be an integer, float, list or ScoringMatrixEntry.')
         self.matrix[key] = value
@@ -340,3 +340,14 @@ class ScoringMatrix:
         :return: Index of the corner of the matrix.
         """
         return tuple(dim - 1 for dim in self.shape)
+
+    def init_needleman_wunsch(self, gap_penalty: Union[int, float] = 1) -> None:
+        """
+        Initialise the Needleman-Wunsch scoring matrix.
+        :param gap_penalty: Gap penalty.
+        """
+        # Initialise for arbitrary number of sequences
+        for i in range(1, self.shape[0]):
+            self[i, 0] = ScoringMatrixEntry(i * gap_penalty, [(i - 1, 0)])
+        for j in range(1, self.shape[1]):
+            self[0, j] = ScoringMatrixEntry(j * gap_penalty, [(0, j - 1)])
