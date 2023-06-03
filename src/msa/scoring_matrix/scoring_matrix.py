@@ -46,7 +46,12 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Whether the scoring matrix entries are equal.
         """
-        return self.score == other.score
+        if isinstance(other, ScoringMatrixEntry):
+            return self.score == other.score
+        elif isinstance(other, (int, float)):
+            return self.score == other
+        else:
+            return False
 
     def __ne__(self, other: 'ScoringMatrixEntry') -> bool:
         """
@@ -54,7 +59,12 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Whether the scoring matrix entries are not equal.
         """
-        return self.score != other.score
+        if isinstance(other, ScoringMatrixEntry):
+            return self.score != other.score
+        elif isinstance(other, (int, float)):
+            return self.score != other
+        else:
+            return True
 
     def __lt__(self, other: 'ScoringMatrixEntry') -> bool:
         """
@@ -62,7 +72,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Whether the scoring matrix entry is less than the other.
         """
-        return self.score < other.score
+        if isinstance(other, ScoringMatrixEntry):
+            return self.score < other.score
+        elif isinstance(other, (int, float)):
+            return self.score < other
+        raise TypeError(f"'<' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __le__(self, other: 'ScoringMatrixEntry') -> bool:
         """
@@ -70,7 +84,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Whether the scoring matrix entry is less than or equal to the other.
         """
-        return self.score <= other.score
+        if isinstance(other, ScoringMatrixEntry):
+            return self.score <= other.score
+        elif isinstance(other, (int, float)):
+            return self.score <= other
+        raise TypeError(f"'<=' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __gt__(self, other: 'ScoringMatrixEntry') -> bool:
         """
@@ -78,7 +96,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Whether the scoring matrix entry is greater than the other.
         """
-        return self.score > other.score
+        if isinstance(other, ScoringMatrixEntry):
+            return self.score > other.score
+        elif isinstance(other, (int, float)):
+            return self.score > other
+        raise TypeError(f"'>' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __ge__(self, other: 'ScoringMatrixEntry') -> bool:
         """
@@ -86,7 +108,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Whether the scoring matrix entry is greater than or equal to the other.
         """
-        return self.score >= other.score
+        if isinstance(other, ScoringMatrixEntry):
+            return self.score >= other.score
+        elif isinstance(other, (int, float)):
+            return self.score >= other
+        raise TypeError(f"'>=' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __add__(self, other: 'ScoringMatrixEntry') -> 'ScoringMatrixEntry':
         """
@@ -94,7 +120,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Sum of the scoring matrix entries.
         """
-        return ScoringMatrixEntry(self.score + other.score, self.traceback + other.traceback)
+        if isinstance(other, ScoringMatrixEntry):
+            return ScoringMatrixEntry(self.score + other.score, self.traceback + other.traceback)
+        elif isinstance(other, (int, float)):
+            return ScoringMatrixEntry(self.score + other, self.traceback)
+        raise TypeError(f"'+' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __sub__(self, other: 'ScoringMatrixEntry') -> 'ScoringMatrixEntry':
         """
@@ -102,7 +132,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Difference of the scoring matrix entries.
         """
-        return ScoringMatrixEntry(self.score - other.score, self.traceback + other.traceback)
+        if isinstance(other, ScoringMatrixEntry):
+            return ScoringMatrixEntry(self.score - other.score, self.traceback + other.traceback)
+        elif isinstance(other, (int, float)):
+            return ScoringMatrixEntry(self.score - other, self.traceback)
+        raise TypeError(f"'-' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __mul__(self, other: 'ScoringMatrixEntry') -> 'ScoringMatrixEntry':
         """
@@ -110,7 +144,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Product of the scoring matrix entries.
         """
-        return ScoringMatrixEntry(self.score * other.score, self.traceback + other.traceback)
+        if isinstance(other, ScoringMatrixEntry):
+            return ScoringMatrixEntry(self.score * other.score, self.traceback + other.traceback)
+        elif isinstance(other, (int, float)):
+            return ScoringMatrixEntry(self.score * other, self.traceback)
+        raise TypeError(f"'*' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __truediv__(self, other: 'ScoringMatrixEntry') -> 'ScoringMatrixEntry':
         """
@@ -118,7 +156,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Quotient of the scoring matrix entries.
         """
-        return ScoringMatrixEntry(self.score / other.score, self.traceback + other.traceback)
+        if isinstance(other, ScoringMatrixEntry):
+            return ScoringMatrixEntry(self.score / other.score, self.traceback + other.traceback)
+        elif isinstance(other, (int, float)):
+            return ScoringMatrixEntry(self.score / other, self.traceback)
+        raise TypeError(f"'/' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __floordiv__(self, other: 'ScoringMatrixEntry') -> 'ScoringMatrixEntry':
         """
@@ -126,7 +168,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Quotient of the scoring matrix entries.
         """
-        return ScoringMatrixEntry(self.score // other.score, self.traceback + other.traceback)
+        if isinstance(other, ScoringMatrixEntry):
+            return ScoringMatrixEntry(self.score // other.score, self.traceback + other.traceback)
+        elif isinstance(other, (int, float)):
+            return ScoringMatrixEntry(self.score // other, self.traceback)
+        raise TypeError(f"'//' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __mod__(self, other: 'ScoringMatrixEntry') -> 'ScoringMatrixEntry':
         """
@@ -134,7 +180,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Modulo of the scoring matrix entries.
         """
-        return ScoringMatrixEntry(self.score % other.score, self.traceback + other.traceback)
+        if isinstance(other, ScoringMatrixEntry):
+            return ScoringMatrixEntry(self.score % other.score, self.traceback + other.traceback)
+        elif isinstance(other, (int, float)):
+            return ScoringMatrixEntry(self.score % other, self.traceback)
+        raise TypeError(f"'%' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __pow__(self, other: 'ScoringMatrixEntry') -> 'ScoringMatrixEntry':
         """
@@ -142,7 +192,11 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Power of the scoring matrix entries.
         """
-        return ScoringMatrixEntry(self.score ** other.score, self.traceback + other.traceback)
+        if isinstance(other, ScoringMatrixEntry):
+            return ScoringMatrixEntry(self.score ** other.score, self.traceback + other.traceback)
+        elif isinstance(other, (int, float)):
+            return ScoringMatrixEntry(self.score ** other, self.traceback)
+        raise TypeError(f"'**' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
     def __cmp__(self, other):
         """
@@ -150,12 +204,21 @@ class ScoringMatrixEntry:
         :param other: Other scoring matrix entry.
         :return: Comparison of the scoring matrix entries.
         """
-        if self.score < other.score:
-            return -1
-        elif self.score > other.score:
-            return 1
-        else:
-            return 0
+        if isinstance(other, ScoringMatrixEntry):
+            if self.score < other.score:
+                return -1
+            elif self.score > other.score:
+                return 1
+            else:
+                return 0
+        elif isinstance(other, (int, float)):
+            if self.score < other:
+                return -1
+            elif self.score > other:
+                return 1
+            else:
+                return 0
+        raise TypeError(f"'cmp' not supported between instances of 'ScoringMatrixEntry' and '{type(other)}'")
 
 
 class ScoringMatrix:
