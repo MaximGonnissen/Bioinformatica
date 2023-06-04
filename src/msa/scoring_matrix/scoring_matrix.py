@@ -342,12 +342,20 @@ class ScoringMatrix:
         """
         return tuple(dim - 1 for dim in self.shape)
 
+    @staticmethod
+    def is_zero_index(*args):
+        """
+        Check if the given index is part of a zero line.
+        :param args: Index to check.
+        """
+        return len([i for i in args if i != 0]) <= 1
+
     def iter_zero_indices(self) -> Iterator[Tuple[int, ...]]:
         """
         Iterate over the indices of the scoring matrix that are part of zero lines.
         """
         for index in np.ndindex(*self.matrix.shape):
-            if len([i for i in index if i != 0]) <= 1:
+            if self.is_zero_index(*index):
                 yield index
 
     def iter_non_zero_indices(self) -> Iterator[Tuple[int, ...]]:
@@ -355,7 +363,7 @@ class ScoringMatrix:
         Iterate over the indices of the scoring matrix that are not part of zero lines.
         """
         for index in np.ndindex(*self.matrix.shape):
-            if len([i for i in index if i != 0]) > 1:
+            if not self.is_zero_index(*index):
                 yield index
 
     def init_needleman_wunsch(self, gap_penalty: Union[int, float] = 1) -> None:
