@@ -47,9 +47,8 @@ class SmithWatermanMSASolver(MSASolver):
         """
         Fill the scoring matrix.
         """
-        for index in np.ndindex(self.scoring_matrix.shape):
-            if len([i for i in index if i != 0]) > 1:
-                self.scoring_matrix.set_score(*index, score=self.scoring_function(*index))
+        for index in self.scoring_matrix.iter_non_zero_indices():
+            self.scoring_matrix.set_score(*index, score=self.scoring_function(*index))
 
     def traceback(self) -> Tuple[Union[int, float], List[str]]:
         pass

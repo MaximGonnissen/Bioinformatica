@@ -1,4 +1,4 @@
-from typing import Union, Tuple, List, Any, Iterable
+from typing import Union, Tuple, List, Any, Iterable, Iterator
 
 import numpy as np
 
@@ -341,6 +341,22 @@ class ScoringMatrix:
         :return: Index of the corner of the matrix.
         """
         return tuple(dim - 1 for dim in self.shape)
+
+    def iter_zero_indices(self) -> Iterator[Tuple[int, ...]]:
+        """
+        Iterate over the indices of the scoring matrix that are part of zero lines.
+        """
+        for index in np.ndindex(*self.matrix.shape):
+            if len([i for i in index if i != 0]) <= 1:
+                yield index
+
+    def iter_non_zero_indices(self) -> Iterator[Tuple[int, ...]]:
+        """
+        Iterate over the indices of the scoring matrix that are not part of zero lines.
+        """
+        for index in np.ndindex(*self.matrix.shape):
+            if len([i for i in index if i != 0]) > 1:
+                yield index
 
     def init_needleman_wunsch(self, gap_penalty: Union[int, float] = 1) -> None:
         """
