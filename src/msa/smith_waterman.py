@@ -67,6 +67,7 @@ class SmithWatermanMSASolver(MSASolver):
                 new_alignment = []
                 for i in range(len(alignment)):
                     new_alignment.append(alignment[i] + self.scoring_matrix.sequences[i][args[i] - 1])
+                    # TODO: Compare index to previous index, for each index that's the same, add a gap. ~ Something like this.
                 new_alignments.append(tuple(new_alignment))
 
         return new_alignments
