@@ -51,9 +51,10 @@ class MSASolver(ABC):
         pass
 
     @abstractmethod
-    def traceback(self) -> Tuple[Union[int, float], List[str]]:
+    def traceback(self, *args) -> Tuple[Union[int, float], List[str]]:
         """
         Perform the traceback.
+        :param args: Coordinates to start the traceback from.
         :return: Tuple of the aligned sequences and the alignment score.
         """
         pass
