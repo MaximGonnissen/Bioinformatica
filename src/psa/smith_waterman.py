@@ -91,7 +91,7 @@ class SmithWatermanPSASolver(PSASolver):
         Recursively find all valid paths.
         :param x: Row index.
         :param y: Column index.
-        :return: Tuple containing a list of tuples with alignments.
+        :return: A list of tuples with alignments.
         """
         if x == 0 or y == 0:
             return [('', '')]
