@@ -73,7 +73,7 @@ class MSASolver(ABC):
             else:
                 score += self.substitution_matrix[char_combination[0]][char_combination[1]]
 
-        return score
+        return self.scoring_matrix.get_score(*comparison_indices) + score
 
     def fill_scoring_matrix(self):
         """
