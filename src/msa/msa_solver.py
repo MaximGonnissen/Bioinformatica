@@ -35,6 +35,21 @@ class MSASolver(ABC):
                     if key != other_key:
                         self.substitution_matrix[key][other_key] = config["mismatch"]
 
+    def get_alignment_chars(self, *args, comparison_indices: Tuple[int, ...]) -> Tuple[str, ...]:
+        """
+        Get the characters to align.
+        :param args: Coordinates in the scoring matrix.
+        :param comparison_indices: Indices of the sequences to compare.
+        :return: Tuple of characters to align.
+        """
+        indices_aligned = tuple([bool(args[i] - comparison_indices[i]) for i in range(len(args))])
+
+        # Get the indices for the sequences.
+        sequence_chars = [self.scoring_matrix.sequences[i][args[i] - 1] if indices_aligned[i] else "-" for i in
+                          range(len(args))]
+
+        return tuple(sequence_chars)
+
     def scoring_function(self, *args, comparison_indices: Tuple[int, ...]) -> Union[int, float]:
         """
         Scoring function for the MSA solver.
@@ -46,11 +61,7 @@ class MSASolver(ABC):
         if len(indices) != len(self.scoring_matrix.shape):
             raise IndexError("Incorrect number of indices given.")
 
-        indices_aligned = tuple([bool(indices[i] - comparison_indices[i]) for i in range(len(indices))])
-
-        # Get the indices for the sequences.
-        sequence_chars = [self.scoring_matrix.sequences[i][indices[i] - 1] if indices_aligned[i] else "-" for i in
-                          range(len(indices))]
+        sequence_chars = self.get_alignment_chars(*args, comparison_indices=comparison_indices)
 
         score = 0
         char_combinations = combinations(sequence_chars, 2)
