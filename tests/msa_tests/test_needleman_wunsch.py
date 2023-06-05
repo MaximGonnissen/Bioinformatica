@@ -1,13 +1,13 @@
 import unittest
 
 from src.fasta_parser.fasta_parser import parse
+from src.msa.needleman_wunsch import NeedlemanWunschMSASolver
 from src.msa.scoring_matrix.scoring_matrix import ScoringMatrix
-from src.msa.smith_waterman import SmithWatermanMSASolver
 
 
-class TestSmithWatermanMSA(unittest.TestCase):
+class TestNeedlemanWunschMSA(unittest.TestCase):
     """
-    Tests for the Smith-Waterman multiple sequence alignment solver.
+    Tests for the Needleman-Wunsch multiple sequence alignment solver.
     """
     test_input = "msa_tests/test_inputs/test.fasta"
     config = {
@@ -38,11 +38,11 @@ class TestSmithWatermanMSA(unittest.TestCase):
         """
         Test the solve method.
         """
-        solver = SmithWatermanMSASolver(self.config)
+        solver = NeedlemanWunschMSASolver(self.config)
         score, alignments = solver.solve(self.sequence_values)
 
 
-class TestSmithWatermanMSA2D(TestSmithWatermanMSA):
+class TestNeedlemanWunschMSA2D(TestNeedlemanWunschMSA):
     """
     Tests for the Smith-Waterman multiple sequence alignment solver with 2D input.
     """
@@ -51,13 +51,33 @@ class TestSmithWatermanMSA2D(TestSmithWatermanMSA):
     def test_solve(self) -> None:
         """
         Test the solve method.
+
+        Note: This alignment seems to have over 50 possible alignments, so this was purely used for score testing.
         """
-        solver = SmithWatermanMSASolver(self.config)
+        solver = NeedlemanWunschMSASolver(self.config)
         score, alignments = solver.solve(self.sequence_values)
 
-        correct_alignments = [
-            ("FGSGTRL", "FGQGTRL")
+        self.assertEqual(score, -1)
+
+    def test_solve_short(self):
+        """
+        Test the solve method with a short input.
+        """
+        sequences = [
+            "GYSSA",
+            "NTEAFF"
         ]
 
-        self.assertEqual(score, 28)
+        solver = NeedlemanWunschMSASolver(self.config)
+        score, alignments = solver.solve(sequences)
+
+        correct_alignments = [
+            ("GYSSA--", "-NTEAFF"),
+            ("GYSSA--", "N-TEAFF"),
+            ("GYSSA--", "NT-EAFF"),
+            ("GYSSA--", "NTE-AFF")
+        ]
+
+        self.assertEqual(score, -13)
+
         self.check_alignments(alignments, correct_alignments)
