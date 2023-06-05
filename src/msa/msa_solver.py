@@ -67,9 +67,9 @@ class MSASolver(ABC):
         char_combinations = combinations(sequence_chars, 2)
         for char_combination in char_combinations:
             if char_combination == ('-', '-'):
-                score -= self.config["two gaps"]
+                score += self.config["two gaps"]
             elif '-' in char_combination:
-                score -= self.config["indel"]
+                score += self.config["indel"]
             else:
                 score += self.substitution_matrix[char_combination[0]][char_combination[1]]
 
