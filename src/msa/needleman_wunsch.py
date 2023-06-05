@@ -25,6 +25,17 @@ class NeedlemanWunschMSASolver(SmithWatermanMSASolver):
         """
         return self.scoring_matrix.get_score(*self.get_start_indices())
 
+    def reached_stopping_condition(self, *args) -> bool:
+        """
+        Check if the stopping condition has been reached.
+        :param args: Coordinates in the scoring matrix.
+        :return: True if the stopping condition has been reached, False otherwise.
+        """
+        if self.scoring_matrix.get_traceback(*args) is None:
+            return True
+
+        return args == (0,) * len(self.scoring_matrix.sequences)
+
     def fill_scoring_matrix(self):
         """
         Fill the scoring matrix.

@@ -61,16 +61,24 @@ class SmithWatermanMSASolver(MSASolver):
         """
         return self.scoring_matrix.get_max_score()
 
+    def reached_stopping_condition(self, *args) -> bool:
+        """
+        Check if the stopping condition has been reached.
+        :param args: Coordinates to check.
+        :return: Whether the stopping condition has been reached.
+        """
+        if len(self.scoring_matrix.get_traceback(*args)) == 0:
+            return True
+
+        return self.scoring_matrix.get_score(*args) == 0
+
     def traceback(self, *args) -> List[Tuple[str, ...]]:
         """
         Perform the traceback.
         :param args: Coordinates to start the traceback from.
         :return: List of tuples of aligned sequences.
         """
-        if self.scoring_matrix.is_zero_index(*args):
-            return [('',) * len(self.scoring_matrix.sequences)]
-
-        if len(self.scoring_matrix.get_traceback(*args)) == 0:
+        if self.reached_stopping_condition(*args):
             return [('',) * len(self.scoring_matrix.sequences)]
 
         new_alignments = []
