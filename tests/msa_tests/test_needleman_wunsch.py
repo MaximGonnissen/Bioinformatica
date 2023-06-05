@@ -81,3 +81,44 @@ class TestNeedlemanWunschMSA2D(TestNeedlemanWunschMSA):
         self.assertEqual(score, -13)
 
         self.check_alignments(alignments, correct_alignments)
+
+    def test_solve_short2(self):
+        """
+        Test the solve method with another short input, with only a single possible alignment.
+        """
+        sequences = [
+            "AATCG",
+            "AACG",
+        ]
+
+        solver = NeedlemanWunschMSASolver(self.config)
+        score, alignments = solver.solve(sequences)
+
+        correct_alignments = [
+            ("AATCG", "AA-CG")
+        ]
+
+        self.assertEqual(score, 16)
+
+        self.check_alignments(alignments, correct_alignments)
+
+    def test_solve_short3(self):
+        """
+        Test the solve method with another short input, with two possible alignments.
+        """
+        sequences = [
+            "AATCGC",
+            "AACGAA",
+        ]
+
+        solver = NeedlemanWunschMSASolver(self.config)
+        score, alignments = solver.solve(sequences)
+
+        correct_alignments = [
+            ("AATCG-C", "AA-CGAA"),
+            ("AATCGC-", "AA-CGAA")
+        ]
+
+        self.assertEqual(score, 10)
+
+        self.check_alignments(alignments, correct_alignments)
