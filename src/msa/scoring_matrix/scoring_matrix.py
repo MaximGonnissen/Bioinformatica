@@ -365,16 +365,3 @@ class ScoringMatrix:
         for index in np.ndindex(*self.matrix.shape):
             if not self.is_zero_index(*index):
                 yield index
-
-    def init_needleman_wunsch(self, gap_penalty: Union[int, float] = 1) -> None:
-        """
-        Initialise the Needleman-Wunsch scoring matrix.
-        :param gap_penalty: Gap penalty.
-        """
-        for dimension in range(len(self.shape)):
-            indices = [0] * len(self.shape)
-            previous_index = indices.copy()
-            for i in range(1, self.shape[dimension]):
-                indices[dimension] = i
-                self[tuple(indices)] = ScoringMatrixEntry(score=i * -gap_penalty, traceback=[tuple(previous_index)])
-                previous_index = indices.copy()
