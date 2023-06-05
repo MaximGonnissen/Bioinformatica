@@ -319,7 +319,8 @@ class ScoringMatrix:
         :param args: Index of the matrix entry.
         :param traceback_direction: Direction to add to the traceback, relative coordinates.
         """
-        self[args].traceback.append(traceback_direction)
+        if traceback_direction not in self[args].traceback and traceback_direction is not None:
+            self[args].traceback.append(traceback_direction)
 
     def get_max_index(self) -> Tuple[int, ...]:
         """
