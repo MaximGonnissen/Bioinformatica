@@ -100,11 +100,11 @@ class MSASolver(ABC):
         pass
 
     @abstractmethod
-    def traceback(self, *args) -> Tuple[Union[int, float], List[str]]:
+    def traceback(self, *args) -> List[Tuple[str, ...]]:
         """
         Perform the traceback.
         :param args: Coordinates to start the traceback from.
-        :return: Tuple of the aligned sequences and the alignment score.
+        :return: Tuple of the aligned sequences.
         """
         pass
 
@@ -114,12 +114,14 @@ class MSASolver(ABC):
         """
         pass
 
-    def post_solve(self, results: Tuple[Union[int, float], List[str]]) -> Tuple[Union[int, float], List[str]]:
+    def post_solve(self, score: Union[int, float], results: List[Tuple[str, ...]]) -> Tuple[
+        Union[int, float], List[Tuple[str, ...]]]:
         """
         Post-solve hook.
+        :param score: The alignment score.
         :param results: The results of the PSA solver.
         """
-        return results
+        return score, results
 
     @abstractmethod
     def get_start_indices(self) -> Tuple[int, ...]:
@@ -129,7 +131,15 @@ class MSASolver(ABC):
         """
         pass
 
-    def solve(self, sequences: List[str]) -> Tuple[Union[int, float], List[str]]:
+    @abstractmethod
+    def get_alignment_score(self) -> Union[int, float]:
+        """
+        Get the alignment score.
+        :return: The alignment score.
+        """
+        pass
+
+    def solve(self, sequences: List[str]) -> Tuple[Union[int, float], List[Tuple[str, ...]]]:
         """
         Solve the multiple sequence alignment problem.
         :param sequences: List of sequences to align.
@@ -138,4 +148,4 @@ class MSASolver(ABC):
         self.scoring_matrix = self.initialise_scoring_matrix(sequences)
         self.fill_scoring_matrix()
         self.pre_solve()
-        return self.post_solve(self.traceback(*self.get_start_indices()))
+        return self.post_solve(self.get_alignment_score(), self.traceback(*self.get_start_indices()))

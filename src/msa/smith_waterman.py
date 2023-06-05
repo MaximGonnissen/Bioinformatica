@@ -1,5 +1,5 @@
 import itertools
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from msa.msa_solver import MSASolver
 from msa.scoring_matrix.scoring_matrix import ScoringMatrix
@@ -53,6 +53,13 @@ class SmithWatermanMSASolver(MSASolver):
         :return: Indices to start the traceback from.
         """
         return self.scoring_matrix.get_max_index()
+
+    def get_alignment_score(self) -> Union[int, float]:
+        """
+        Get the alignment score.
+        :return: Alignment score.
+        """
+        return self.scoring_matrix.get_max_score()
 
     def traceback(self, *args) -> List[Tuple[str, ...]]:
         """
