@@ -1,3 +1,4 @@
+import itertools
 from typing import List, Tuple
 
 from msa.msa_solver import MSASolver
@@ -8,6 +9,7 @@ class SmithWatermanMSASolver(MSASolver):
     """
     Class for the Smith-Waterman multiple sequence alignment solver.
     """
+    add_zero_score = True
 
     def initialise_scoring_matrix(self, sequences: List[str]) -> ScoringMatrix:
         """
@@ -22,7 +24,28 @@ class SmithWatermanMSASolver(MSASolver):
         Update the position in the scoring matrix, setting the score and traceback.
         :param args: Coordinates in the scoring matrix.
         """
-        score = self.scoring_matrix.get_score(*args)
+        possible_scores = []
+        possible_tracebacks = []
+
+        indices_offset = list(itertools.product((0, -1), repeat=len(args)))
+        indices_offset.remove(tuple([0] * len(args)))
+
+        indices_to_check = [tuple([sum(x) for x in zip(args, offset)]) for offset in indices_offset]
+
+        for indices in indices_to_check:
+            possible_scores.append(self.scoring_function(*args, comparison_indices=indices))
+            possible_tracebacks.append(indices)
+
+        if self.add_zero_score:
+            possible_scores.append(0)
+            possible_tracebacks.append(None)
+
+        max_score = max(possible_scores)
+        self.scoring_matrix.set_score(*args, score=max_score)
+
+        for i in range(len(possible_scores)):
+            if possible_scores[i] == max_score:
+                self.scoring_matrix.add_traceback(*args, traceback_direction=possible_tracebacks[i])
 
     def traceback(self, *args) -> List[Tuple[str, ...]]:
         """
