@@ -344,19 +344,27 @@ class ScoringMatrix:
         return tuple(dim - 1 for dim in self.shape)
 
     @staticmethod
-    def is_zero_index(*args):
+    def is_zero_line(*args):
         """
         Check if the given index is part of a zero line.
         :param args: Index to check.
         """
         return len([i for i in args if i != 0]) <= 1
 
+    @staticmethod
+    def has_zero_index(*args):
+        """
+        Check if the given index is part of a zero plane.
+        :param args: Index to check.
+        """
+        return any(i == 0 for i in args)
+
     def iter_zero_indices(self) -> Iterator[Tuple[int, ...]]:
         """
         Iterate over the indices of the scoring matrix that are part of zero lines.
         """
         for index in np.ndindex(*self.matrix.shape):
-            if self.is_zero_index(*index):
+            if self.is_zero_line(*index):
                 yield index
 
     def iter_non_zero_indices(self) -> Iterator[Tuple[int, ...]]:
@@ -364,5 +372,5 @@ class ScoringMatrix:
         Iterate over the indices of the scoring matrix that are not part of zero lines.
         """
         for index in np.ndindex(*self.matrix.shape):
-            if not self.is_zero_index(*index):
+            if not self.is_zero_line(*index):
                 yield index
