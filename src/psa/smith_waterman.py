@@ -40,13 +40,14 @@ class SmithWatermanPSASolver(PSASolver):
         for i in range(self.scoring_matrix.width()):
             for j in range(self.scoring_matrix.height()):
                 scores = self.calc_matrix_score(i, j)
-                self.scoring_matrix.set_score(i, j, max(scores))
+                max_score = max(scores)
+                self.scoring_matrix.set_score(i, j, max_score)
                 if len(scores) > 1:
-                    if self.scoring_matrix.get_score(i, j) == scores[0]:
+                    if max_score == scores[0]:
                         self.scoring_matrix.add_traceback(i, j, Direction.DIAGONAL)
-                    if self.scoring_matrix.get_score(i, j) == scores[1]:
+                    if max_score == scores[1]:
                         self.scoring_matrix.add_traceback(i, j, Direction.UP)
-                    if self.scoring_matrix.get_score(i, j) == scores[2]:
+                    if max_score == scores[2]:
                         self.scoring_matrix.add_traceback(i, j, Direction.LEFT)
 
     def _solve(self) -> Tuple[int, List[Tuple[str, str]]]:
