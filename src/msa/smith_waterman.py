@@ -64,7 +64,7 @@ class SmithWatermanMSASolver(MSASolver):
             return []
 
         if len(self.scoring_matrix.get_traceback(*args)) == 0:
-            return []  # TODO: May need to return sequence chars instead of nothing, in this case?
+            return [('',) * len(self.scoring_matrix.sequences)]
 
         new_alignments = []
         for traceback_direction in self.scoring_matrix.get_traceback(*args):
