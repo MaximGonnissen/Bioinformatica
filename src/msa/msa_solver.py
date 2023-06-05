@@ -121,6 +121,14 @@ class MSASolver(ABC):
         """
         return results
 
+    @abstractmethod
+    def get_start_indices(self) -> Tuple[int, ...]:
+        """
+        Get the starting indices for the traceback.
+        :return: The starting indices for the traceback.
+        """
+        pass
+
     def solve(self, sequences: List[str]) -> Tuple[Union[int, float], List[str]]:
         """
         Solve the multiple sequence alignment problem.
@@ -130,4 +138,4 @@ class MSASolver(ABC):
         self.scoring_matrix = self.initialise_scoring_matrix(sequences)
         self.fill_scoring_matrix()
         self.pre_solve()
-        return self.post_solve(self.traceback())
+        return self.post_solve(self.traceback(*self.get_start_indices()))
