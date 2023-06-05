@@ -47,6 +47,13 @@ class SmithWatermanMSASolver(MSASolver):
             if possible_scores[i] == max_score:
                 self.scoring_matrix.add_traceback(*args, traceback_direction=possible_tracebacks[i])
 
+    def get_start_indices(self) -> Tuple[int, ...]:
+        """
+        Get the indices to start the traceback from.
+        :return: Indices to start the traceback from.
+        """
+        return self.scoring_matrix.get_max_index()
+
     def traceback(self, *args) -> List[Tuple[str, ...]]:
         """
         Perform the traceback.
