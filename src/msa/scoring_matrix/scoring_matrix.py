@@ -42,6 +42,13 @@ class ScoringMatrixEntry:
         else:
             raise IndexError("Index out of range.")
 
+    def rint(self):
+        """
+        Required for numpy round.
+        :return:
+        """
+        return int(self.score)
+
     def __str__(self):
         """
         Get the string representation of the scoring matrix entry.
@@ -281,6 +288,12 @@ class ScoringMatrix:
         """
         return str(self.matrix)
 
+    def print(self):
+        """
+        Print the matrix.
+        """
+        print(self.matrix.round(0))
+
     def get_score(self, *args) -> Union[int, float]:
         """
         Get the score for a matrix entry.
@@ -372,5 +385,5 @@ class ScoringMatrix:
         Iterate over the indices of the scoring matrix that are not part of zero lines.
         """
         for index in np.ndindex(*self.matrix.shape):
-            if not self.is_zero_line(*index):
+            if not self.has_zero_index(*index):
                 yield index
