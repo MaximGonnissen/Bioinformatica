@@ -17,12 +17,12 @@ class SmithWatermanMSASolver(MSASolver):
         """
         return ScoringMatrix(sequences)
 
-    def fill_scoring_matrix(self):
+    def update_matrix_position(self, *args) -> None:
         """
-        Fill the scoring matrix.
+        Update the position in the scoring matrix, setting the score and traceback.
+        :param args: Coordinates in the scoring matrix.
         """
-        for index in self.scoring_matrix.iter_non_zero_indices():
-            self.scoring_matrix.set_score(*index, score=self.scoring_function(*index))
+        score = self.scoring_matrix.get_score(*args)
 
     def traceback(self, *args) -> List[Tuple[str, ...]]:
         """

@@ -39,7 +39,7 @@ class MSASolver(ABC):
         """
         Scoring function for the MSA solver.
         :param args: Coordinates in the scoring matrix.
-        :return: Score for the given coordinates.
+        :return: Pairwise score for the given coordinates.
         """
         # Simple version for now, only taking into account matches and mismatches.
         indices = args
@@ -56,19 +56,27 @@ class MSASolver(ABC):
 
         return score
 
+    def fill_scoring_matrix(self):
+        """
+        Fill the scoring matrix.
+        """
+        for index in self.scoring_matrix.iter_non_zero_indices():
+            self.update_matrix_position(*index)
+
+    @abstractmethod
+    def update_matrix_position(self, *args) -> None:
+        """
+        Update the position in the scoring matrix, setting the score and traceback.
+        :param args: Coordinates in the scoring matrix.
+        """
+        pass
+
     @abstractmethod
     def initialise_scoring_matrix(self, sequences: List[str]) -> ScoringMatrix:
         """
         Initialise the scoring matrix.
         :param sequences: List of sequences to align.
         :return: Initialised scoring matrix.
-        """
-        pass
-
-    @abstractmethod
-    def fill_scoring_matrix(self):
-        """
-        Fill the scoring matrix.
         """
         pass
 
