@@ -60,7 +60,7 @@ class SmithWatermanMSASolver(MSASolver):
         :param args: Coordinates to start the traceback from.
         :return: List of tuples of aligned sequences.
         """
-        if self.scoring_matrix.has_zero_index(*args):
+        if self.scoring_matrix.is_zero_index(*args):
             return [('',) * len(self.scoring_matrix.sequences)]
 
         if len(self.scoring_matrix.get_traceback(*args)) == 0:
