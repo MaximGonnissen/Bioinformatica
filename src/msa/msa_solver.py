@@ -35,24 +35,32 @@ class MSASolver(ABC):
                     if key != other_key:
                         self.substitution_matrix[key][other_key] = config["mismatch"]
 
-    def scoring_function(self, *args) -> Union[int, float]:
+    def scoring_function(self, *args, comparison_indices: Tuple[int, ...]) -> Union[int, float]:
         """
         Scoring function for the MSA solver.
         :param args: Coordinates in the scoring matrix.
+        :param comparison_indices: Indices of the sequences to compare.
         :return: Pairwise score for the given coordinates.
         """
-        # Simple version for now, only taking into account matches and mismatches.
         indices = args
         if len(indices) != len(self.scoring_matrix.shape):
             raise IndexError("Incorrect number of indices given.")
 
+        indices_aligned = tuple([bool(indices[i] - comparison_indices[i]) for i in range(len(indices))])
+
         # Get the indices for the sequences.
-        sequence_chars = [self.scoring_matrix.sequences[i][indices[i] - 1] for i in range(len(indices))]
+        sequence_chars = [self.scoring_matrix.sequences[i][indices[i] - 1] if indices_aligned[i] else "-" for i in
+                          range(len(indices))]
 
         score = 0
         char_combinations = combinations(sequence_chars, 2)
         for char_combination in char_combinations:
-            score += self.substitution_matrix[char_combination[0]][char_combination[1]]
+            if char_combination == ('-', '-'):
+                score += self.config["two gaps"]
+            elif '-' in char_combination:
+                score += self.config["indel"]
+            else:
+                score += self.substitution_matrix[char_combination[0]][char_combination[1]]
 
         return score
 
