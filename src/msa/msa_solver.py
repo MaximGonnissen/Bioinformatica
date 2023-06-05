@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from itertools import combinations
 from typing import List, Tuple, Optional, Union
 
 from blosum import BLOSUM
@@ -33,6 +34,27 @@ class MSASolver(ABC):
                 for other_key in self.substitution_matrix[key].keys():
                     if key != other_key:
                         self.substitution_matrix[key][other_key] = config["mismatch"]
+
+    def scoring_function(self, *args) -> Union[int, float]:
+        """
+        Scoring function for the MSA solver.
+        :param args: Coordinates in the scoring matrix.
+        :return: Score for the given coordinates.
+        """
+        # Simple version for now, only taking into account matches and mismatches.
+        indices = args
+        if len(indices) != len(self.scoring_matrix.shape):
+            raise IndexError("Incorrect number of indices given.")
+
+        # Get the indices for the sequences.
+        sequence_chars = [self.scoring_matrix.sequences[i][indices[i] - 1] for i in range(len(indices))]
+
+        score = 0
+        char_combinations = combinations(sequence_chars, 2)
+        for char_combination in char_combinations:
+            score += self.substitution_matrix[char_combination[0]][char_combination[1]]
+
+        return score
 
     @abstractmethod
     def initialise_scoring_matrix(self, sequences: List[str]) -> ScoringMatrix:
