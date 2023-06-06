@@ -76,8 +76,8 @@ class ScoringMatrix(list):
         """
         max_score = 0
         max_score_index = (0, 0)
-        for i in range(self.width()):
-            for j in range(self.height()):
+        for i in range(self.height()):
+            for j in range(self.width()):
                 if self.get_score(i, j) > max_score:
                     max_score = self.get_score(i, j)
                     max_score_index = (i, j)
@@ -97,8 +97,8 @@ class ScoringMatrix(list):
         """
         max_score = self.max_score()
         max_score_indices = []
-        for i in range(self.width()):
-            for j in range(self.height()):
+        for i in range(self.height()):
+            for j in range(self.width()):
                 if self.get_score(i, j) == max_score:
                     max_score_indices.append((i, j))
         return max_score_indices
@@ -108,7 +108,7 @@ class ScoringMatrix(list):
         Find the corner matrix entry.
         :return: Indices of the corner matrix entry.
         """
-        return self.width() - 1, self.height() - 1
+        return self.height() - 1, self.width() - 1
 
     def print(self) -> None:
         """
@@ -124,7 +124,7 @@ class ScoringMatrix(list):
         matrix_string = ""
         matrix_string += '\t' * 2 + '\t'.join([f"{char}" for char in self.top_sequence]) + '\n'
 
-        for i in range(self.width()):
+        for i in range(self.height()):
             if i == 0:
                 matrix_string += '\t'
             else:
@@ -138,9 +138,9 @@ class ScoringMatrix(list):
         Initialise the scoring matrix for the Smith-Waterman algorithm.
         """
         self.clear()
-        for i in range(self.width()):
+        for i in range(self.height()):
             self.append([])
-            for j in range(self.height()):
+            for j in range(self.width()):
                 self[i].append([0, []])
 
     @classmethod
@@ -158,16 +158,16 @@ class ScoringMatrix(list):
         Initialise the scoring matrix for the Needleman-Wunsch algorithm.
         """
         self.clear()
-        for i in range(self.width()):
+        for i in range(self.height()):
             self.append([])
-            for j in range(self.height()):
+            for j in range(self.width()):
                 self[i].append([0, []])
 
-        for i in range(self.width()):
+        for i in range(self.height()):
             self.set_score(i, 0, -i * gap_penalty)
             self.set_traceback(i, 0, [Direction.UP])
 
-        for j in range(self.height()):
+        for j in range(self.width()):
             self.set_score(0, j, -j * gap_penalty)
             self.set_traceback(0, j, [Direction.LEFT])
 
