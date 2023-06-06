@@ -58,7 +58,7 @@ class PSASolver(ABC):
         return self.config['indel'] * length
 
     def solve(self, sequence_1: str, sequence_2: str, scoring_matrix: ScoringMatrix = None) -> Tuple[
-        int, List[Tuple[str, str]]]:
+        Union[int, float], List[Tuple[str, str]]]:
         """
         Solve the pairwise sequence alignment problem.
         :param sequence_1: The first sequence.
