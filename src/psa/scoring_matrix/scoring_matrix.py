@@ -24,6 +24,22 @@ class ScoringMatrix(list):
     def height(self) -> int:
         return len(self.bottom_sequence) + 1
 
+    def top_char(self, y: int) -> str:
+        """
+        Get the character at the top of the matrix.
+        :param y: Column index.
+        :return: Character at the top of the matrix.
+        """
+        return self.top_sequence[y - 1]
+
+    def bottom_char(self, x: int) -> str:
+        """
+        Get the character at the bottom of the matrix.
+        :param x: Row index.
+        :return: Character at the bottom of the matrix.
+        """
+        return self.bottom_sequence[x - 1]
+
     def get_score(self, x: int, y: int) -> Union[int, float]:
         """
         Get the score for a matrix entry.
