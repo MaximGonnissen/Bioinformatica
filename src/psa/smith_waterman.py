@@ -37,8 +37,8 @@ class SmithWatermanPSASolver(PSASolver):
         """
         Calculate the scoring matrix.
         """
-        for i in range(self.scoring_matrix.width()):
-            for j in range(self.scoring_matrix.height()):
+        for i in range(self.scoring_matrix.height()):
+            for j in range(self.scoring_matrix.width()):
                 scores = self.calc_matrix_score(i, j)
                 max_score = max(scores)
                 self.scoring_matrix.set_score(i, j, max_score)
@@ -80,8 +80,8 @@ class SmithWatermanPSASolver(PSASolver):
         if x == 0 or y == 0:
             return [0]
         return [
-            self.scoring_matrix.get_score(x - 1, y - 1) + self.scoring_function(self.sequence_1[x - 1],
-                                                                                self.sequence_2[y - 1]),
+            self.scoring_matrix.get_score(x - 1, y - 1) + self.scoring_function(self.scoring_matrix.bottom_char(x),
+                                                                                self.scoring_matrix.top_char(y)),
             max([self.scoring_matrix.get_score(x - i, y) - self.gap_penalty(i) for i in range(1, x + 1)]),
             max([self.scoring_matrix.get_score(x, y - j) - self.gap_penalty(j) for j in range(1, y + 1)]),
             0
@@ -106,16 +106,19 @@ class SmithWatermanPSASolver(PSASolver):
             if direction == Direction.DIAGONAL:
                 paths = self.traceback(x - 1, y - 1)
                 for alignment in paths:
-                    new_paths.append((alignment[0] + self.sequence_1[x - 1], alignment[1] + self.sequence_2[y - 1]))
+                    new_paths.append((alignment[0] + self.scoring_matrix.top_char(y),
+                                      alignment[1] + self.scoring_matrix.bottom_char(x)))
 
             elif direction == Direction.UP:
                 paths = self.traceback(x - 1, y)
                 for alignment in paths:
-                    new_paths.append((alignment[0] + self.sequence_1[x - 1], alignment[1] + '-'))
+                    new_paths.append((alignment[0] + '-', alignment[1] + self.scoring_matrix.bottom_char(x)))
 
             elif direction == Direction.LEFT:
                 paths = self.traceback(x, y - 1)
                 for alignment in paths:
-                    new_paths.append((alignment[0] + '-', alignment[1] + self.sequence_2[y - 1]))
+                    new_paths.append((alignment[0] + self.scoring_matrix.top_char(y), alignment[1] + '-'))
+
+        # TODO: This is broken. Undo & just invert width & height in scoring matrix?
 
         return list(set(new_paths))
