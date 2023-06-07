@@ -14,7 +14,6 @@ def main(args: List[str] = None) -> int:
     """
     Main function of the program.
     :param args: Commandline arguments, if None, parse from sys.argv
-    :param print_output: Print output to stdout
     :return: Exit code
     """
     # Create argument parser
