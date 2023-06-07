@@ -23,7 +23,6 @@ class TestNeedlemanWunschMSA(unittest.TestCase):
         """
         self.sequences = parse(self.test_input)
         self.sequence_values = list(self.sequences.values())
-        self.scoring_matrix = ScoringMatrix(self.sequence_values)
 
     def check_alignments(self, alignments: list[tuple[str, ...]], correct_alignments: list[tuple[str, ...]]) -> None:
         """
@@ -31,8 +30,8 @@ class TestNeedlemanWunschMSA(unittest.TestCase):
         :param alignments: The alignments to check.
         :param correct_alignments: The correct alignments.
         """
-        for alignment in alignments:
-            self.assertIn(alignment, correct_alignments)
+        for alignment in correct_alignments:
+            self.assertIn(alignment, alignments)
 
     def test_solve(self) -> None:
         """
