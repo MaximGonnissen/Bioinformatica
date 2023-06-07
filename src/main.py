@@ -81,8 +81,20 @@ if __name__ == '__main__':
     print('Alignments score: {}'.format(score))
     print('Alignments written to {}'.format(args.output))
 
+    if len(alignments) == 0:
+        print('No alignments found')
+        exit(0)
+
+    primary_alignment = alignments[0]
     with open(args.output, 'w') as f:
-        for alignment in alignments:
-            for i in range(len(alignment)):
-                alignment_id = list(sequence_info.keys())[i]
-                f.write(f"{alignment_id}: {alignment[i]}\n")
+        for i in range(len(primary_alignment)):
+            alignment_id = list(sequence_info.keys())[i]
+            f.write(f"{alignment_id}: {primary_alignment[i]}\n")
+
+    if len(alignments) > 1:
+        with open(args.output.replace('.txt', '_all.txt'), 'w') as f:
+            for alignment in alignments:
+                for i in range(len(alignment)):
+                    alignment_id = list(sequence_info.keys())[i]
+                    f.write(f"{alignment_id}: {alignment[i]}\n")
+                f.write('\n')
