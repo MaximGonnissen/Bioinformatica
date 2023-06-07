@@ -56,6 +56,7 @@ s3: CCAGGGACCA
 - [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 - Requirements listed in [requirements.txt](requirements.txt)
   - blosum 2.0.2 -- [documentation](https://pypi.org/project/blosum/) `Used for fetching the BLOSUM62 matrix`
+  - numpy 1.24.3 -- [documentation](https://numpy.org/doc/stable/) `Used for matrix calculations`
 
 ## Usage
 
@@ -66,13 +67,12 @@ python main.py -c <config file> -i <input file> -o <output file>
 ```
 
 Where `<config file>` is the path to the config file, `<input file>` is the path to the input file, and `<output file>`
-is
-the path to the output file - all relative to the root of the project.
+is the path to the output file - all relative to the root of the project.
 
 ### Example usage
 
 ```shell
-python main.py -c ./data/config.json -i ./data/input/input.fasta -o ./data/output/output.txt
+python ./src/main.py -c ./data/config/config.json -i ./data/input/cs_assignment.fasta -o ./data/output/output.txt msa needleman_wunsch
 ```
 
 ## Testing
