@@ -31,7 +31,7 @@ class NeedlemanWunschMSASolver(SmithWatermanMSASolver):
         :param args: Coordinates in the scoring matrix.
         :return: True if the stopping condition has been reached, False otherwise.
         """
-        if self.scoring_matrix.get_traceback(*args) is None:
+        if len(self.scoring_matrix.get_traceback(*args)) == 0:
             return True
 
         return args == (0,) * len(self.scoring_matrix.sequences)
