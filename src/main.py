@@ -85,6 +85,8 @@ if __name__ == '__main__':
         print('No alignments found')
         exit(0)
 
+    alignments = sorted(alignments)
+
     primary_alignment = alignments[0]
     with open(args.output, 'w') as f:
         for i in range(len(primary_alignment)):
