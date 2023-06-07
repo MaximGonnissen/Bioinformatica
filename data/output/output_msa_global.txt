@@ -1,0 +1,15 @@
+unknown_J_region_1: GYSSASKIIFGSGTRLSIRP
+unknown_J_region_2: ----NTEAFFGQGTRLTVV-
+unknown_J_region_3: ----NYGYTFGSGTRLTVV-
+
+unknown_J_region_1: GYSSASKIIFGSGTRLSIRP
+unknown_J_region_2: ----NTEAFFGQGTRLTV-V
+unknown_J_region_3: ----NYGYTFGSGTRLTV-V
+
+unknown_J_region_1: GYSSASKIIFGSGTRLSIRP
+unknown_J_region_2: ----NTEAFFGQGTRLT-VV
+unknown_J_region_3: ----NYGYTFGSGTRLT-VV
+
+unknown_J_region_1: GYSSASKIIFGSGTRLSIRP
+unknown_J_region_2: ----NTEAFFGQGTRL-TVV
+unknown_J_region_3: ----NYGYTFGSGTRL-TVV

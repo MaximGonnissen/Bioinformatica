@@ -1,0 +1,3 @@
+unknown_J_region_1: FGSGTRLSIR
+unknown_J_region_2: FGQGTRLTVV
+unknown_J_region_3: FGSGTRLTVV
