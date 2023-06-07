@@ -40,7 +40,7 @@ Input files are expected to be in [FASTA](https://en.wikipedia.org/wiki/FASTA_fo
 Output files are in a custom format, with the following structure:
 
 ```
-s<sequence ID from FASTA input file>: <sequence>
+<sequence ID from FASTA input file>: <sequence>
 ```
 
 ### Example output file
