@@ -49,7 +49,7 @@ if __name__ == '__main__':
     # Run program
     solver = None
 
-    if args.mode == 'pairwise':
+    if args.mode in ['pairwise', 'psa']:
         if args.pairwise_mode == 'needleman_wunsch':
             solver = NeedlemanWunschPSASolver(config)
         elif args.pairwise_mode == 'smith_waterman':
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     score, alignments = None, []
 
     if args.mode == 'pairwise':
-        score, alignment = solver.solve(sequence_values[0], sequence_values[1])
+        score, alignments = solver.solve(sequence_values[0], sequence_values[1])
     else:
         score, alignments = solver.solve(sequence_values)
 
