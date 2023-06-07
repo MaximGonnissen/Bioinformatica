@@ -3,6 +3,7 @@ import unittest
 from src.fasta_parser.fasta_parser import parse
 from src.msa.scoring_matrix.scoring_matrix import ScoringMatrix
 from src.msa.smith_waterman import SmithWatermanMSASolver
+from utils import print_lined_up_alignments
 
 
 class TestSmithWatermanMSA(unittest.TestCase):
@@ -40,6 +41,13 @@ class TestSmithWatermanMSA(unittest.TestCase):
         """
         solver = SmithWatermanMSASolver(self.config)
         score, alignments = solver.solve(self.sequence_values)
+
+        print(f"TODO: Check if this test is correct. ({__name__}.{self._testMethodName})")
+        print(f"Score: {score}")
+        print("Alignments:")
+        print_lined_up_alignments(alignments)
+
+        # TODO: check if correct
 
 
 class TestSmithWatermanMSA2D(TestSmithWatermanMSA):
