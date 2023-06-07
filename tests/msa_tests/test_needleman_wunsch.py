@@ -2,7 +2,6 @@ import unittest
 
 from src.fasta_parser.fasta_parser import parse
 from src.msa.needleman_wunsch import NeedlemanWunschMSASolver
-from src.msa.scoring_matrix.scoring_matrix import ScoringMatrix
 
 
 class TestNeedlemanWunschMSA(unittest.TestCase):
@@ -39,6 +38,12 @@ class TestNeedlemanWunschMSA(unittest.TestCase):
         """
         solver = NeedlemanWunschMSASolver(self.config)
         score, alignments = solver.solve(self.sequence_values)
+
+        correct_alignments = [
+            ("GYSSASKIIFGSGTRLSIRP", "----NTEAFFGQGTRLTVV-", "----NYGYTFGSGTRLTVV-")
+        ]
+
+        self.check_alignments(alignments, correct_alignments)
 
 
 class TestNeedlemanWunschMSA2D(TestNeedlemanWunschMSA):
