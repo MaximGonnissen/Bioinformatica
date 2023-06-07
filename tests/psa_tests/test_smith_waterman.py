@@ -22,7 +22,7 @@ class TestSmithWaterman(unittest.TestCase):
         sequence1 = sequences[sequence_ids[0]]
 
         config = {
-            'indel': 2
+            'indel': -2
         }
 
         solver = SmithWatermanPSASolver(config=config, substitution_matrix=BLOSUM(62))
@@ -45,7 +45,7 @@ class TestSmithWaterman(unittest.TestCase):
         sequence1 = sequences[sequence_ids[0]]
 
         config = {
-            'indel': 1
+            'indel': -1
         }
 
         solver = SmithWatermanPSASolver(config=config, substitution_matrix=BLOSUM(62))
@@ -72,7 +72,7 @@ class TestSmithWaterman(unittest.TestCase):
         config = {
             'match': 5,
             'mismatch': -5,
-            'indel': 2
+            'indel': -2
         }
 
         solver = SmithWatermanPSASolver(config=config)
@@ -86,3 +86,30 @@ class TestSmithWaterman(unittest.TestCase):
                     self.assertEqual(solver.substitution_matrix[key][other_key], -5)
                 else:
                     self.assertEqual(solver.substitution_matrix[key][other_key], 5)
+
+    def test_smith_waterman_assignment(self):
+        """
+        Test the Smith-Waterman algorithm with the assignment example.
+        """
+        sequences = parse("psa_tests/test_inputs/assignment_test.fasta")
+
+        sequences = list(sequences.values())
+
+        sequence1 = sequences[0]
+        sequence2 = sequences[1]
+
+        config = {
+            "match": 5,
+            "mismatch": -2,
+            "indel": -4,
+            "two gaps": 0
+        }
+
+        solver = SmithWatermanPSASolver(config=config)
+
+        score, alignments = solver.solve(sequence_1=sequence1, sequence_2=sequence2)
+
+        self.assertEqual(score, 7)
+        self.assertEqual(len(alignments), 1)
+        self.assertEqual(alignments[0][1], "TEAFF")
+        self.assertEqual(alignments[0][0], "SKIIF")

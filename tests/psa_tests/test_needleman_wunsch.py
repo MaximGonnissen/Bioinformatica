@@ -22,19 +22,20 @@ class TestNeedlemanWunsch(unittest.TestCase):
         sequence1 = sequences[sequence_ids[0]]
 
         config = {
-            'indel': 2
+            "indel": -4,
         }
 
         solver = NeedlemanWunschPSASolver(config=config, substitution_matrix=BLOSUM(62))
 
         score, alignments = solver.solve(sequence_1=sequence1, sequence_2=sequence2)
 
-        self.assertEqual(score, -5)
-        self.assertEqual(len(alignments), 2)
+        self.assertEqual(score, -15)
+        self.assertEqual(len(alignments), 3)
 
         correct_pairs = [
-            ("GYSSASKIIF----", "N-TEA---FFGQGT"),
-            ("GYSSASKIIF----", "N-TEA--F-FGQGT"),
+            ("GYSS-ASKIIF", "NTEAFFGQGT-"),
+            ("GYSSA-SKIIF", "NTEAFFGQGT-"),
+            ("GYSSA--SKIIF", "N-TEAFFGQGT-")
         ]
 
         for alignment in alignments:
@@ -51,7 +52,7 @@ class TestNeedlemanWunsch(unittest.TestCase):
         sequence1 = sequences[sequence_ids[0]]
 
         config = {
-            'indel': 3
+            'indel': -3
         }
 
         solver = NeedlemanWunschPSASolver(config=config, substitution_matrix=BLOSUM(62))
@@ -79,7 +80,7 @@ class TestNeedlemanWunsch(unittest.TestCase):
         sequence1 = sequences[sequence_ids[0]]
 
         config = {
-            'indel': 15
+            'indel': -15
         }
 
         solver = NeedlemanWunschPSASolver(config=config, substitution_matrix=BLOSUM(62))
