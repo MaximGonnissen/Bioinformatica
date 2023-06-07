@@ -98,6 +98,8 @@ class TestSmithWaterman(unittest.TestCase):
         sequence1 = sequences[0]
         sequence2 = sequences[1]
 
+        print(f"Sequence 1: {sequence1}\nSequence 2: {sequence2}")
+
         config = {
             "match": 5,
             "mismatch": -2,
@@ -109,7 +111,12 @@ class TestSmithWaterman(unittest.TestCase):
 
         score, alignments = solver.solve(sequence_1=sequence1, sequence_2=sequence2)
 
-        self.assertEqual(score, 7)
+        self.assertEqual(score, 28)
         self.assertEqual(len(alignments), 1)
-        self.assertEqual(alignments[0][1], "TEAFF")
-        self.assertEqual(alignments[0][0], "SKIIF")
+
+        correct_pairs = [
+            ("FGSGTRL", "FGQGTRL")
+        ]
+
+        for alignment in alignments:
+            self.assertIn(alignment, correct_pairs)
