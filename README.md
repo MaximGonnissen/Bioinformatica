@@ -78,4 +78,68 @@ python ./src/main.py -c ./data/config/config.json -i ./data/input/cs_assignment.
 ## Testing
 
 Tests are provided in the `tests` folder. They can be examined as a reference for the expected output of the program,
-as well as examples of how to use the program.
+as well as examples of how to use the source as a library.
+
+## Packages
+
+### [src](src)
+
+This is the top level package for the project. It contains the [main](src/main.py) module, which is a CLI interface
+for the project. It also contains the [utils](src/utils.py) module, which contains two simple utility methods.
+One to create a directory if it does not exist, and one to print alignments in a pretty format.
+
+### [fasta_parser](src/fasta_parser)
+
+This package contains the [fasta_parser](src/fasta_parser/fasta_parser.py) module, which is used to parse FASTA files.
+This module allows parsing from both a file and a string, and also provides iterator variants of these methods in case
+the FASTA file is too large to fit in memory.
+
+### [msa](src/msa)
+
+This package contains everything related to multiple sequence alignment.
+
+An abstract base class for msa solvers is provided in the [msa_solver](src/msa/msa_solver.py) module. This class
+contains a number of base methods which are reused in the concrete implementations of the msa solvers, as well as a
+number of abstract methods which must be implemented by these implementations. The main method of this class is the
+`solve` method, which chains the different abstract methods together. It also provides a pre- and post-solve abstract
+method, which can be used to perform actions before and after the actual solving of the msa. These are not used in the
+concrete implementations, but are provided in case they are useful for any future implementations.
+
+The actual implementations of the msa solvers are provided in the [needleman_wunsch](src/msa/needleman_wunsch.py) and
+[smith_waterman](src/msa/smith_waterman.py) modules, which contain the NeedlemanWunschMSASolver and
+SmithWatermanMSASolver classes respectively. The NeedlemanWunschMSASolver class inherits from the
+SmithWatermanMSASolver class, which inherits from the MSASolver class. This is because there is a large amount of
+code reuse between the two implementations.
+
+#### [scoring_matrix](src/msa/scoring_matrix)
+
+This subpackage of `msa` contains the [scoring_matrix](src/msa/scoring_matrix/scoring_matrix.py) module. This module
+contains the ScoringMatrixEntry and ScoringMatrix classes, which (together) are used to represent a scoring matrix.
+
+The ScoringMatrixEntry class represents a single entry in a scoring matrix. It contains a score and traceback.
+A number of methods are implemented to work nicely with the ScoringMatrix class, as well as feel like a general
+python type. For example, it implements methods such as `__eq__`, `__lt__`, `__gt__`, `__add__`, `__sub__`, `__mul__`.
+
+The ScoringMatrix class represents a scoring matrix. It contains an n-dimensional numpy array of ScoringMatrixEntry.
+Dimensions are chosen based on the number of sequences to align. A plethora of methods are implemented to access and
+manipulate the scoring matrix. For example, it implements methods such as `__getitem__`, `__setitem__`, `__iter__`.
+In addition, it also implements methods to quickly grab msa relevant information from the scoring matrix, such as
+the index with the highest score, whether an index is part of a zero plane, iterating over zero plane indices, etc...
+
+### [psa](src/psa)
+
+This package contains everything related to pairwise sequence alignment.
+
+Technically, this module is not necessary since the msa solvers can also be used to perform pairwise sequence.
+However, during development, I found it useful to first implement pairwise sequence alignment as an exercise to
+better understand the algorithms, before implementing the msa solvers.
+
+Similarly to the MSA package, an abstract base class for psa solvers is provided in the
+[psa_solver](src/psa/psa_solver.py) module. This class likewise contains a number of base and abstract methods, which
+are reused in the concrete implementations of the psa solvers. The main method of this class is once again the `solve`
+method, and it works analogously to the `solve` method of the MSASolver class.
+
+The actual implementations of the psa solvers are provided in the [needleman_wunsch](src/psa/needleman_wunsch.py) and
+[smith_waterman](src/psa/smith_waterman.py) modules, which contain the NeedlemanWunschPSASolver and
+SmithWatermanPSASolver classes respectively. The NeedlemanWunschPSASolver class inherits from the
+SmithWatermanPSASolver class, which inherits from the PSASolver class.
