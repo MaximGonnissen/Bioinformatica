@@ -1,5 +1,6 @@
 import argparse
 import json
+from typing import List
 
 from fasta_parser.fasta_parser import parse
 from msa.needleman_wunsch import NeedlemanWunschMSASolver
@@ -8,7 +9,14 @@ from psa.needleman_wunsch import NeedlemanWunschPSASolver
 from psa.smith_waterman import SmithWatermanPSASolver
 from utils import check_and_create_dir
 
-if __name__ == '__main__':
+
+def main(args: List[str] = None) -> int:
+    """
+    Main function of the program.
+    :param args: Commandline arguments, if None, parse from sys.argv
+    :param print_output: Print output to stdout
+    :return: Exit code
+    """
     # Create argument parser
     parser = argparse.ArgumentParser(description='Commandline arguments for the program', prog='Bioinformatics')
 
@@ -17,6 +25,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--input', help='Path to input file', type=str,
                         default='./data/input/cs_assignment.fasta')
     parser.add_argument('-o', '--output', help='Path to output file', type=str, default='./data/output/output.txt')
+    parser.add_argument('-v', '--verbose', help='Print output to stdout', action='store_true')
 
     # Add subparsers for pairwise and multiple sequence alignment
     subparsers = parser.add_subparsers(dest='mode', help='Alignment mode', required=True)
@@ -38,13 +47,17 @@ if __name__ == '__main__':
                                                           help='Smith-Waterman multiple sequence alignment')
 
     # Parse arguments
-    args = parser.parse_args()
+    if args is None:
+        args = parser.parse_args()
+    else:
+        args = parser.parse_args(args)
 
     # Check if output directory exists, create it if not
     check_and_create_dir(args.output)
 
     # Read config file
-    config = json.load(open(args.config, 'r'))
+    with open(args.config, 'r') as f:
+        config = json.load(f)
 
     # Run program
     solver = None
@@ -78,11 +91,13 @@ if __name__ == '__main__':
     else:
         score, alignments = solver.solve(sequence_values)
 
-    print('Alignments score: {}'.format(score))
-    print('Alignments written to {}'.format(args.output))
+    if args.verbose:
+        print('Alignments score: {}'.format(score))
+        print('Alignments written to {}'.format(args.output))
 
     if len(alignments) == 0:
-        print('No alignments found')
+        if args.verbose:
+            print('No alignments found')
         exit(0)
 
     alignments = sorted(alignments)
@@ -100,3 +115,9 @@ if __name__ == '__main__':
                     alignment_id = list(sequence_info.keys())[i]
                     f.write(f"{alignment_id}: {alignment[i]}\n")
                 f.write('\n')
+
+    return 0
+
+
+if __name__ == '__main__':
+    main()
