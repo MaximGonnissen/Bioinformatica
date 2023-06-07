@@ -31,8 +31,8 @@ class TestSmithWatermanMSA(unittest.TestCase):
         :param alignments: The alignments to check.
         :param correct_alignments: The correct alignments.
         """
-        for alignment in alignments:
-            self.assertIn(alignment, correct_alignments)
+        for alignment in correct_alignments:
+            self.assertIn(alignment, alignments)
 
     def test_solve(self) -> None:
         """
