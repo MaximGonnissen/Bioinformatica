@@ -44,4 +44,7 @@ class NeedlemanWunschMSASolver(SmithWatermanMSASolver):
             distance_from_origin = np.sum(index)
             self.scoring_matrix.set_score(*index, score=self.config["indel"] * distance_from_origin)
 
+            closest_to_origin = tuple([max(x - 1, 0) for x in index])  # TODO: Is this actually correct (enough)?
+            self.scoring_matrix.add_traceback(*index, traceback_direction=closest_to_origin)
+
         super().fill_scoring_matrix()
