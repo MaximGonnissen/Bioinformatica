@@ -1,12 +1,12 @@
 import argparse
 import json
 
-from src.fasta_parser.fasta_parser import parse
-from src.msa.needleman_wunsch import NeedlemanWunschMSASolver
-from src.msa.smith_waterman import SmithWatermanMSASolver
-from src.psa.needleman_wunsch import NeedlemanWunschPSASolver
-from src.psa.smith_waterman import SmithWatermanPSASolver
-from src.utils import check_and_create_dir
+from fasta_parser.fasta_parser import parse
+from msa.needleman_wunsch import NeedlemanWunschMSASolver
+from msa.smith_waterman import SmithWatermanMSASolver
+from psa.needleman_wunsch import NeedlemanWunschPSASolver
+from psa.smith_waterman import SmithWatermanPSASolver
+from utils import check_and_create_dir
 
 if __name__ == '__main__':
     # Create argument parser
@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # Add subparsers for pairwise and multiple sequence alignment
     subparsers = parser.add_subparsers(dest='mode', help='Alignment mode', required=True)
-    pairwise_parser = subparsers.add_parser('pairwise', help='Pairwise sequence alignment')
+    pairwise_parser = subparsers.add_parser('psa', help='Pairwise sequence alignment')
     msa_parser = subparsers.add_parser('msa', help='Multiple sequence alignment')
 
     # Add subparsers for pairwise alignment
@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     score, alignments = None, []
 
-    if args.mode == 'pairwise':
+    if args.mode == 'psa':
         score, alignments = solver.solve(sequence_values[0], sequence_values[1])
     else:
         score, alignments = solver.solve(sequence_values)
