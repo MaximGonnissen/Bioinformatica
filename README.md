@@ -144,3 +144,10 @@ The actual implementations of the psa solvers are provided in the [needleman_wun
 [smith_waterman](src/psa/smith_waterman.py) modules, which contain the NeedlemanWunschPSASolver and
 SmithWatermanPSASolver classes respectively. The NeedlemanWunschPSASolver class inherits from the
 SmithWatermanPSASolver class, which inherits from the PSASolver class.
+
+#### [scoring_matrix](src/psa/scoring_matrix)
+
+This subpackage of `psa` contains the [scoring_matrix](src/psa/scoring_matrix/scoring_matrix.py) module. This module
+is comparable to the scoring_matrix module in the msa package, but does not use numpy, nor a custom type. Instead, it
+inherits from the `list` type, and uses a list of lists to represent the scoring matrix, with as entries a tuple of the
+score and traceback.
