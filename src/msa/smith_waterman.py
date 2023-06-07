@@ -72,23 +72,4 @@ class SmithWatermanMSASolver(MSASolver):
 
         return self.scoring_matrix.get_score(*args) == 0
 
-    def traceback(self, *args) -> List[Tuple[str, ...]]:
-        """
-        Perform the traceback.
-        :param args: Coordinates to start the traceback from.
-        :return: List of tuples of aligned sequences.
-        """
-        if self.reached_stopping_condition(*args):
-            return [('',) * len(self.scoring_matrix.sequences)]
 
-        new_alignments = []
-        for traceback_direction in self.scoring_matrix.get_traceback(*args):
-            traceback_alignments = self.traceback(*traceback_direction)
-            alignment_chars = self.get_alignment_chars(*args, comparison_indices=traceback_direction)
-            for alignment in traceback_alignments:
-                new_alignment = []
-                for i in range(len(alignment)):
-                    new_alignment.append(alignment[i] + alignment_chars[i])
-                new_alignments.append(tuple(new_alignment))
-
-        return new_alignments
