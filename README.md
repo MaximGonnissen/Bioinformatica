@@ -63,11 +63,12 @@ s3: CCAGGGACCA
 Run from the root of the project (above the `src` folder):
 
 ```shell
-python main.py -c <config file> -i <input file> -o <output file>
+python main.py -c <config file> -i <input file> -o <output file> <msa/psa> <needleman_wunsch/smith_waterman>
 ```
 
 Where `<config file>` is the path to the config file, `<input file>` is the path to the input file, and `<output file>`
-is the path to the output file - all relative to the root of the project.
+is the path to the output file - all relative to the root of the project. The final two arguments specify whether to
+use the msa or psa solvers (note that the msa solver can also be used for psa), and which specific solver to use.
 
 ### Example usage
 
