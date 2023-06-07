@@ -42,12 +42,12 @@ class NeedlemanWunschPSASolver(SmithWatermanPSASolver):
         if x == 0 and y == 0:
             return [0]
         elif x == 0:
-            return [-self.gap_penalty(y)]
+            return [self.gap_penalty(y)]
         elif y == 0:
-            return [-self.gap_penalty(x)]
+            return [self.gap_penalty(x)]
         return [
             self.scoring_matrix.get_score(x - 1, y - 1) + self.scoring_function(self.sequence_1[x - 1],
                                                                                 self.sequence_2[y - 1]),
-            max([self.scoring_matrix.get_score(x - i, y) - self.gap_penalty(i) for i in range(1, x + 1)]),
-            max([self.scoring_matrix.get_score(x, y - j) - self.gap_penalty(j) for j in range(1, y + 1)])
+            max([self.scoring_matrix.get_score(x - i, y) + self.gap_penalty(i) for i in range(1, x + 1)]),
+            max([self.scoring_matrix.get_score(x, y - j) + self.gap_penalty(j) for j in range(1, y + 1)])
         ]

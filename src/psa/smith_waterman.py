@@ -82,8 +82,8 @@ class SmithWatermanPSASolver(PSASolver):
         return [
             self.scoring_matrix.get_score(x - 1, y - 1) + self.scoring_function(self.scoring_matrix.bottom_char(x),
                                                                                 self.scoring_matrix.top_char(y)),
-            max([self.scoring_matrix.get_score(x - i, y) - self.gap_penalty(i) for i in range(1, x + 1)]),
-            max([self.scoring_matrix.get_score(x, y - j) - self.gap_penalty(j) for j in range(1, y + 1)]),
+            max([self.scoring_matrix.get_score(x - i, y) + self.gap_penalty(i) for i in range(1, x + 1)]),
+            max([self.scoring_matrix.get_score(x, y - j) + self.gap_penalty(j) for j in range(1, y + 1)]),
             0
         ]
 
@@ -118,7 +118,5 @@ class SmithWatermanPSASolver(PSASolver):
                 paths = self.traceback(x, y - 1)
                 for alignment in paths:
                     new_paths.append((alignment[0] + self.scoring_matrix.top_char(y), alignment[1] + '-'))
-
-        # TODO: This is broken. Undo & just invert width & height in scoring matrix?
 
         return list(set(new_paths))
