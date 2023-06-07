@@ -98,8 +98,6 @@ class TestSmithWaterman(unittest.TestCase):
         sequence1 = sequences[0]
         sequence2 = sequences[1]
 
-        print(f"Sequence 1: {sequence1}\nSequence 2: {sequence2}")
-
         config = {
             "match": 5,
             "mismatch": -2,
